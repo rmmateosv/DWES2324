@@ -6,7 +6,7 @@
     <title>Document</title>
 </head>
 <body>
-    <form action="Ejercicio14_tratamiento.php" method="get">
+    <form action="Ejercicio14_tratamiento.php" method="post">
         <fieldset>
             <legend>Datos Personales</legend>
             <div>
@@ -27,8 +27,8 @@
             <div>
                 <label>Sexo</label>
                 <br/>
-                <input type="radio" name="sexo" checked="checked"/>Hombre
-                <input type="radio" name="sexo"/>Mujer
+                <input type="radio" name="sexo" checked="checked" value="H"/>Hombre
+                <input type="radio" name="sexo" value="M"/>Mujer
             </div>
             <div>
                 <label>Fecha Nacimiento</label>
@@ -36,7 +36,7 @@
             </div>
             <div>
                 <label>Pais</label>
-                <select name="pais" multiple="multiple">
+                <select name="pais[]" multiple="multiple">
                     <option>Francia</option>
                     <option selected="selected">España</option>
                     <option>EEUU</option>
@@ -61,13 +61,13 @@
             </div>
             <div>
                 <label>Aficciones</label>
-                <input type="checkbox" name="aficc[]"/>Cine
-                <input type="checkbox" name="aficc[]"/>Deporte
-                <input type="checkbox" name="aficc[]"/>Literatura
+                <input type="checkbox" name="aficc[]" value="Cine"/>Cine
+                <input type="checkbox" name="aficc[]" value="Deporte"/>Deporte
+                <input type="checkbox" name="aficc[]" value="Literatura"/>Literatura
             </div>
             <div>
                 <label>Comentario</label>
-                <textarea placeholder="Escribe más sobre ti"></textarea>
+                <textarea name="comentario" placeholder="Escribe más sobre ti"></textarea>
             </div>
         </fieldset>
         <input type="submit" name="validar" value="Validar">
