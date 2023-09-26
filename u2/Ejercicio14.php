@@ -6,7 +6,7 @@
     <title>Document</title>
 </head>
 <body>
-    <form action="Ejercicio14_tratamiento.php" method="post">
+    <form action="Ejercicio14_tratamiento.php" method="post" enctype="multipart/form-data">
         <fieldset>
             <legend>Datos Personales</legend>
             <div>
@@ -27,8 +27,8 @@
             <div>
                 <label>Sexo</label>
                 <br/>
-                <input type="radio" name="sexo" checked="checked" value="H"/>Hombre
-                <input type="radio" name="sexo" value="M"/>Mujer
+                <input type="radio" name="sexo" checked="checked" value="Hombre"/>Hombre
+                <input type="radio" name="sexo" value="Mujer"/>Mujer
             </div>
             <div>
                 <label>Fecha Nacimiento</label>
