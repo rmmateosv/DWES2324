@@ -70,7 +70,10 @@
             <td><?php echo $_POST['nombre']?></td>
             <?php
             for($i=1;$i<=$_POST['numAcom'];$i++){
-                echo '<td>'.$_POST['nombres'][$i-1].'</td>';
+                if(isset($_POST['nombres'][$i-1]))
+                    echo '<td>'.$_POST['nombres'][$i-1].'</td>';
+                else
+                    echo '<td></td>';
             }
             ?>
         </tr>
