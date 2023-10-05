@@ -18,7 +18,7 @@ class Alumno{
     }
     function __destruct()
     {
-        echo '<p>Alumno '.$this->nombre.' dado de baja</p>';
+        //echo '<p>Alumno '.$this->nombre.' dado de baja</p>';
     }
 
     /**

@@ -49,6 +49,27 @@ include_once 'accesoDatos.php'
             }
         }
     ?>
-
+    <!-- Mostrar alumnos -->
+    <h1>LISTADO DE ALUMNOS</h1>
+    <hr/>
+    <table border="1" width="50%">
+        <tr>
+            <th>Id</th>
+            <th>Nombre</th>
+            <th>Fecha Nacimiento</th>
+        </tr>
+        <?php
+        //Obtenemos en un array todos los alumnos que hay en el fichero
+        //$alumnos va a ser un array de objetos Alumno
+        $alumnos=obtenerAlumnos();
+        foreach($alumnos as $a){
+            echo '<tr>';
+            echo '<td>'.$a->getNumExp().'</td>';
+            echo '<td>'.$a->getNombre().'</td>';
+            echo '<td>'.date('d/m/Y',$a->getFechaN()).'</td>';
+            echo '</tr>';
+        }
+        ?>
+    </table>
 </body>
 </html>
