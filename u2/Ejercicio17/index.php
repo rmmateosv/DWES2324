@@ -15,20 +15,20 @@ $ad=new Modelo();
     <form action="" method="post">
         <div>
             <label for="fecha">Fecha/Hora</label><br/>
-            <input type="date" name="fecha" value="<?php echo date('Y-m-d');?>"/>
+            <input type="date" id="fecha" name="fecha" value="<?php echo date('Y-m-d');?>"/>
             <input type="time" name="hora" value="<?php echo date('h:i');?>"/>
         </div>
         <div>
-            <label for="nombre">Nombre del cliente</label>
-            <input type="text" name="nombre" placeholder="Nombre del cliente"/>
+            <label for="nombre">Nombre del cliente</label><br/>
+            <input type="text" id="nombre" name="nombre" placeholder="Nombre del cliente"/>
         </div>
         <div>
-            <label for="tipoS">Selecciona el servicio</label>
-            <select name="tipoS">
+            <label for="tipoS">Selecciona el servicio</label><br/>
+            <select id="tipoS" name="tipoS">                
                 <option value="1">Corte Sra.</option>
                 <option value="2">Corte Sr.</option>
                 <option value="3">Corte Tinte.</option>
-                <option value="4">Corte Mechas</option>
+                <option value="4">Corte Mechas</option>              
             </select>
         </div>
         <div>
@@ -44,8 +44,8 @@ $ad=new Modelo();
             echo '<h3 style="color:red">Error, rellena todos los campos</h3>';
         }
         else{
-            $cita=new Cita(strtotime($_POST['fecha']),
-                       strtotime($_POST['hora']),
+            $cita=new Cita($_POST['fecha'],
+                       $_POST['hora'],
                        $_POST['nombre'],
                        $_POST['tipoS']);
             //No vamos a chequear que la cita exista
@@ -57,7 +57,8 @@ $ad=new Modelo();
                 echo '<h3 style="color:red">Error al crear la cita</h3>';
             }
         }
-        
+       //REcargar
+       header('location:index.php'); 
     }
     ?>
 </body>

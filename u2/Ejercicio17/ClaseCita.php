@@ -1,7 +1,7 @@
 <?php
 class Cita{
-    private int $fecha;
-    private int $hora;
+    private string $fecha;
+    private string $hora;
     private string $nombreC;
     private int $tipoServicio;
 
