@@ -32,6 +32,20 @@
             }
             return $resultado;
         }
+        public function obtenerCitas(){
+            $resultado = array();
+
+            if(file_exists($this->nombreFichero)){
+                $datos=file($this->nombreFichero);
+                //Convertimos cada línea del fichero en un objeto Cita
+                foreach($datos as $linea){
+                    $campos=explode(';',$linea);
+                    $cita = new Cita($campos[0],$campos[1],$campos[2],$campos[3]);
+                    $resultado[]=$cita;
+                }
+            }
+            return $resultado;
+        }
 
     }
 ?>
