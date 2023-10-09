@@ -16,7 +16,7 @@ $ad=new Modelo();
         <div>
             <label for="fecha">Fecha/Hora</label><br/>
             <input type="date" id="fecha" name="fecha" value="<?php echo date('Y-m-d');?>"/>
-            <input type="time" name="hora" value="<?php echo date('h:i');?>"/>
+            <input type="time" name="hora" value="<?php echo date('H:i');?>"/>
         </div>
         <div>
             <label for="nombre">Nombre del cliente</label><br/>
