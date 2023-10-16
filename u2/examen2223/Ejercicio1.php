@@ -32,9 +32,9 @@
         <div>
             <label>Estancia</label><br/>
             <select name="estancia">
-                <option>Diario</option>
-                <option>Fin de semana</option>
-                <option>Promocionado</option>
+                <option value="1">Diario</option>
+                <option  value="2">Fin de semana</option>
+                <option  value="3">Promocionado</option>
             </select>
         </div>
         <br/>
@@ -57,6 +57,71 @@
         </div>
     </form>
     <?php
+        //Chequeos
+        if(isset($_POST['crear'])){
+            //Campos vacíos
+            if(empty($_POST['nombre']) or empty($_POST['dni'])  or empty($_POST['numero'])){
+                echo '<h3 style="color:red;">Error:Dni, nombre y nº de noches no pueden estar vacíos</h3>';
+            }
+            else{
+                //Pago en efectivo y nº noches
+                if(isset($_POST['pago']) and $_POST['pago']=='Efectivo' and $_POST['numero']>2){
+                    echo '<h3 style="color:red;">Error:Pago en efectivo solamente para menos de 2 noches</h3>';
+                }
+                else{
+                    //Chequeo de cuna y cama
+                    //Por posición
+                    if(isset($_POST['opciones']) and isset($_POST['opciones'][1])){
+                        if($_POST['opciones'][0]==1 and $_POST['opciones'][1]==2){
+                            echo '<h3 style="color:red;">Error:No se puede marcar cuna y cama supletoria</h3>';
+                            $error=true;
+                        }
+                    }
+                    if(!isset($error)){
+                        //Precio por noche
+                        switch($_POST['tipoH']){
+                            case 'Individual':
+                                $importe= $_POST['numero']*45;
+                                break;
+                            case 'Doble':
+                                $importe= $_POST['numero']*55;
+                                break;
+                            case 'Suite':
+                                $importe= $_POST['numero']*75;
+                                break;
+                        }
+                        //Subo 10%
+                        if(isset($_POST['estancia']) and $_POST['estancia']==2){
+                            $importe*=1.10;
+                        }
+                        //BAjo un 10%
+                        if(isset($_POST['estancia']) and $_POST['estancia']==3){
+                            $importe*=0.90;
+                        }
+
+                        echo '<h3 style="color:blue;">Error:Entrada correcta. El importe de la estancia 
+                        es de '.$importe.'</h3>';
+                    }
+                    //Comprobando los valores del array sin usar funciones de array
+                    /*if(isset($_POST['opciones'])){
+                        $hayCuna = false;
+                        foreach($_POST['opciones'] as $o){
+                            if($o==1 or $o==2){
+                                if(!$hayCuna){
+                                    $hayCuna=true;
+                                }
+                                else{
+                                    echo '<h3 style="color:red;">Error:No se puede marcar cuna y cama supletoria</h3>';
+                                }
+                                
+                            }
+                        }
+                    }*/
+             
+            }
+            
+        }
+    }   
     ?>
 </body>
 </html>
