@@ -34,6 +34,7 @@
                 name="opciones[]" 
                 value="'.(isset($_POST['opciones'][$i])?$_POST['opciones'][$i]:"").'"
                 placeholder="Opción '.($i+1).'" />';
+                imp
             }
         }
         
