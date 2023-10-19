@@ -21,6 +21,16 @@ function rellenarRadio($campo, $item, $opcionPorDefecto){
         echo 'checked = "checked"';
     }
 }
+function rellenarCheckBox($item){
+    if(isset($_POST['opciones'])){
+        foreach($_POST['opciones'] as $o){
+        if($o==$item){            
+            echo 'checked = "checked"';
+        }
+    }
+    }
+    
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -81,9 +91,9 @@ function rellenarRadio($campo, $item, $opcionPorDefecto){
         <br/>
         <div>
             <label>Opciones</label><br/>
-            <input type="checkbox" name="opciones[]" value="1" />Cuna
-            <input type="checkbox" name="opciones[]" value="2"/>Cama Supletoria
-            <input type="checkbox" name="opciones[]" value="3"/>Lavandería            
+            <input type="checkbox" name="opciones[]" value="1" <?php rellenarCheckBox('1');?>/>Cuna
+            <input type="checkbox" name="opciones[]" value="2" <?php rellenarCheckBox('2');?>/>Cama Supletoria
+            <input type="checkbox" name="opciones[]" value="3" <?php rellenarCheckBox('3');?>/>Lavandería            
         </div>
         <br/>
         <div>
