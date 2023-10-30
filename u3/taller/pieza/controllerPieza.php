@@ -1,3 +1,10 @@
+<?php
+require_once '../Modelo.php';
+$bd = new Modelo();
+if($bd->getConexion()==null){
+    $mensaje = array('e','Error, no hay conexión con la bd');
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,7 +16,35 @@
 </head>
 <body>
     <header>
-        
+        <?php
+            require_once '../menu.php';
+        ?>
     </header>
+    <section>
+        <!-- Crear Pieza -->
+    </section>
+    <section>
+        <!-- Comunicar mensajes -->
+        <?php
+        if(isset($mensaje)){
+            if($mensaje[0]=='e')
+                echo '<h3 class="text-danger">'.$mensaje[1].'</h3>';
+            else
+                echo '<h3 class="text-success">'.$mensaje[1].'</h3>';
+        }
+        ?>
+    </section>
+    <section>
+        <!-- Mostrar piezas y dar opción a modificar y borrar -->
+        <?php
+            if($bd->getConexion()!=null){
+                //Obtener piezas
+                $piezas = $bd->obtenerPiezas();
+            }
+        ?>
+    </section>
+    <footer>
+
+    </footer>
 </body>
 </html>

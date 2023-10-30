@@ -3,7 +3,7 @@
   <div class="container-fluid">
     <ul class="navbar-nav">
       <li class="nav-item">
-        <a class="nav-link active" href="pieza/controllerPieza.ph">Pieza</a>
+        <a class="nav-link active" href="controllerPieza.php">Pieza</a>
       </li>
      <li class="nav-item">
         <a class="nav-link" href="#">Link</a>
