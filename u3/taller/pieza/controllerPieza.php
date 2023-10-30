@@ -19,29 +19,63 @@ if($bd->getConexion()==null){
         <?php
             require_once '../menu.php';
         ?>
+        <h3 style="text-align: center;">GESTIÓN DE PIEZAS</h3>
     </header>
     <section>
         <!-- Crear Pieza -->
     </section>
     <section>
+        
         <!-- Comunicar mensajes -->
         <?php
         if(isset($mensaje)){
+            echo '<div class="container p-5 my-5 border">';            
             if($mensaje[0]=='e')
-                echo '<h3 class="text-danger">'.$mensaje[1].'</h3>';
+                echo '<h4 class="text-danger">'.$mensaje[1].'</h4>';
             else
-                echo '<h3 class="text-success">'.$mensaje[1].'</h3>';
+                echo '<h4 class="text-success">'.$mensaje[1].'</h4>';
+            echo '</div>';
         }
         ?>
     </section>
     <section>
-        <!-- Mostrar piezas y dar opción a modificar y borrar -->
+        <div class="container p-5 my-5 border">
+            <!-- Mostrar piezas y dar opción a modificar y borrar -->
         <?php
             if($bd->getConexion()!=null){
                 //Obtener piezas
                 $piezas = $bd->obtenerPiezas();
+                //Mostramos las piezas en una tabla
+                ?>
+                <table  class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Código</th>
+                            <th>Clase</th>
+                            <th>Descrición</th>
+                            <th>Precio</th>
+                            <th>Stock</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+                        foreach($piezas as $p){
+                            echo '<tr>';
+                            echo '<td>'.$p->getCodigo().'</td>';
+                            echo '<td>'.$p->getClase().'</td>';
+                            echo '<td>'.$p->getDescripcion().'</td>';
+                            echo '<td>'.$p->getPrecio().'</td>';
+                            echo '<td>'.$p->getStock().'</td>';
+                            echo '</tr>';
+                        }
+                        ?>
+                    </tbody>
+                </table>
+                <?php
             }
-        ?>
+        ?>   
+        </div>
+        
     </section>
     <footer>
 
