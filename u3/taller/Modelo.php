@@ -19,12 +19,51 @@ class Modelo{
         
     }
 
+    function insertarPieza(Pieza $p){
+        $resultado = false;
+        try {
+            $consulta = $this->conexion->prepare(
+                'insert into pieza values (?,?,?,?,?)');
+            $parms = array($p->getCodigo(),$p->getClase(),$p->getDescripcion(),
+                           $p->getPrecio(),$p->getStock());
+            
+            // Esta opción equivale al if 
+            //return $consulta->execute($parms);
+            if($consulta->execute($parms)){
+                $resultado=true;
+            }
+        } catch (PDOException $e) {
+            echo $e->getMessage();
+        }
+        return $resultado;
+    }
+    function obtenerPieza($codigo){
+        $resultado = null;
+        try {
+            $consulta =$this->conexion->prepare('select * from pieza where codigo = ?');
+            $parms = array($codigo);
+            if($consulta->execute($parms)){
+                //REcuperar el registro y crear un objeto Pieza en resultado
+                if($fila=$consulta->fetch()){
+                    $resultado = new Pieza();
+                    $resultado->setCodigo($fila['codigo']);
+                    $resultado->setClase($fila['clase']);
+                    $resultado->setDescripcion($fila['descripcion']);
+                    $resultado->setPrecio($fila['precio']);
+                    $resultado->setStock($fila['stock']);
+                }
+            }
+        } catch (PDOException $e) {
+            echo $e->getMessage();
+        }
+        return $resultado;
+    }
     function obtenerPiezas(){
         //Devuelve un array de objetos Pieza
         $resultado = array();
         try {
             //Ejecutamos consulta
-            $datos = $this->conexion->query('select * from pieza');
+            $datos = $this->conexion->query('select * from pieza order by codigo');
             if($datos!==false){
                 //Recorrer los datos para crear objetos Pieza
                 while($fila=$datos->fetch()){
