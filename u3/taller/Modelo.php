@@ -19,6 +19,42 @@ class Modelo{
         
     }
 
+    function existenReparaciones(string $codigo){
+        $resultado = false;
+        try{
+            $consulta = $this->conexion->prepare("select * from piezareparacion 
+                            where pieza = ?");
+            $parametros =  array($codigo);
+            if($consulta->execute($parametros)){
+                if($consulta->fetch()){
+                    $resultado = true;
+                }
+            }
+        }
+        catch(PDOException $e){
+            echo $e->getMessage();
+        }
+        return $resultado;
+    }
+    function borrarPieza(string $codigo){
+        $resultado = false;
+        try{
+            $consulta = $this->conexion->prepare("delete from pieza where codigo = ?");
+            $parametros =  array($codigo);
+            if($consulta->execute($parametros)){
+                //Comprobar si se ha borrado al menos 1 registro
+                //En ese caso, ponemos resultado = true
+                //rowcount devuelve el nº de registros borrados
+                if($consulta->rowCount()==1){
+                    $resultado=true;
+                }
+            }
+        }
+        catch(PDOException $e){
+            echo $e->getMessage();
+        }
+        return $resultado;
+    }
     function insertarPieza(Pieza $p){
         $resultado = false;
         try {

@@ -37,6 +37,29 @@ else{
         }
         
     }
+    elseif(isset($_POST['borrar'])){
+        //Chequear que la pieza exista
+        $p = $bd->obtenerPieza($_POST['borrar']);
+        if($p!=null){
+            //Comprobar que se puede borrar (si no se ha usado en ninguna reparación)
+            if($bd->existenReparaciones($p->getCodigo())){
+                $mensaje=array('e','No se puede borrar la pieza porque ya se ha usado en reparaciones');
+            }
+            else{
+                //Borrar la pieza
+                if($bd->borrarPieza($p->getCodigo())){
+                    $mensaje=array('i','Pieza Borrada');
+                }
+                else{
+                    $mensaje=array('e','Se ha producido un error al borrar la pieza');
+                }
+            }
+            
+        }
+        else{
+            $mensaje=array('e','Error, la pieza no existe');
+        }
+    }
 }
 ?>
 <!DOCTYPE html>
@@ -56,7 +79,7 @@ else{
         <h3 style="text-align: center;">GESTIÓN DE PIEZAS</h3>
     </header>
     <section>
-    <div class="container p-5 my-5 border">
+    <div class="container p-2 my-2 border">
         <!-- Crear Pieza -->
         <form action="#" method="post">
             <div class="row">
@@ -125,7 +148,7 @@ else{
         ?>
     </section>
     <section>
-        <div class="container p-5 my-5 border">
+        <div class="container p-2 my-2 border">
             <!-- Mostrar piezas y dar opción a modificar y borrar -->
         <?php
             if($bd->getConexion()!=null){
@@ -133,35 +156,65 @@ else{
                 $piezas = $bd->obtenerPiezas();
                 //Mostramos las piezas en una tabla
                 ?>
-                <table  class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th>Código</th>
-                            <th>Clase</th>
-                            <th>Descrición</th>
-                            <th>Precio</th>
-                            <th>Stock</th>
-                            <th>Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php
-                        foreach($piezas as $p){
-                            echo '<tr>';
-                            echo '<td>'.$p->getCodigo().'</td>';
-                            echo '<td>'.$p->getClase().'</td>';
-                            echo '<td>'.$p->getDescripcion().'</td>';
-                            echo '<td>'.$p->getPrecio().'</td>';
-                            echo '<td>'.$p->getStock().'</td>';
-                            echo '<td>';
-                            echo '<button name="" value=""><img src="../icon/modif25.png"/></button>';
-                            echo '<button name="" value=""><img src="../icon/delete25.png"/></button>';
-                            echo'</td>';
-                            echo '</tr>';
-                        }
-                        ?>
-                    </tbody>
-                </table>
+                <form action="#" method="post">
+                    <table  class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Código</th>
+                                <th>Clase</th>
+                                <th>Descrición</th>
+                                <th>Precio</th>
+                                <th>Stock</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php
+                            foreach($piezas as $p){
+                                echo '<tr>';
+                                echo '<td>'.$p->getCodigo().'</td>';
+                                echo '<td>'.$p->getClase().'</td>';
+                                echo '<td>'.$p->getDescripcion().'</td>';
+                                echo '<td>'.$p->getPrecio().'</td>';
+                                echo '<td>'.$p->getStock().'</td>';
+                                echo '<td>';
+                                echo '<button type="submit" class="btn btn-outline-dark" name="modif" value="'.$p->getCodigo().'"><img src="../icon/modif25.png"/></button>';
+                                echo '<button type="button" class="btn btn-outline-dark"  data-bs-toggle="modal"  data-bs-target="#a'.$p->getCodigo().'" name="avisar" value="'.$p->getCodigo().'"><img src="../icon/delete25.png"/></button>';
+                                echo'</td>';
+                                echo '</tr>';
+                                
+                                //Definir ventana modal
+                                ?>
+                                <!-- The Modal -->
+                                    <div class="modal" id="a<?php echo $p->getCodigo();?>">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+
+                                        <!-- Modal Header -->
+                                        <div class="modal-header">
+                                            <h4 class="modal-title">Borrar Pieza</h4>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                        </div>
+
+                                        <!-- Modal body -->
+                                        <div class="modal-body">
+                                            ¿Está seguro que desea borrar la pieza?
+                                        </div>
+
+                                        <!-- Modal footer -->
+                                        <div class="modal-footer">
+                                            <button type="submit" name="borrar" value="<?php echo $p->getCodigo();?>" class="btn btn-danger" data-bs-dismiss="modal">Borrar</button>
+                                        </div>
+
+                                        </div>
+                                    </div>
+                                    </div>
+                                <?php
+                            }
+                            ?>
+                        </tbody>
+                    </table>
+                </form>
                 <?php
             }
         ?>   
