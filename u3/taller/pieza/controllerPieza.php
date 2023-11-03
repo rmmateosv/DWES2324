@@ -79,147 +79,16 @@ else{
         <h3 style="text-align: center;">GESTIÓN DE PIEZAS</h3>
     </header>
     <section>
-    <div class="container p-2 my-2 border">
         <!-- Crear Pieza -->
-        <form action="#" method="post">
-            <div class="row">
-                <div class="col">
-                    <label>Código</label>
-                </div>
-                <div class="col">
-                    <label>Clase</label>
-                </div>
-                <div class="col">
-                    <label>Descripción</label>
-                </div>
-                <div class="col">
-                    <label>Precio</label>
-                   
-                </div>
-                <div class="col">
-                    <label>Stock</label>
-                </div>
-                <div class="col">
-                </div>
-            </div>  
-            <div class="row">
-                <div class="col">
-                    <input type="text" name="codigo" placeholder="F01" maxlength="3"/>
-                </div>
-                <div class="col">
-                    <select name="clase" class="form-select form-select-sm">
-                        <option>Refrigeración</option>
-                        <option>Filtro</option>
-                        <option>Motor</option>
-                        <option>Otros</option>
-                    </select>
-                </div>
-                <div class="col">
-                    <input type="text" name="desc" placeholder="Nombre pieza"/>
-                </div>
-                <div class="col">
-                    
-                    <input type="number" name="precio" step="0.01"/>
-                </div>
-                <div class="col">
-                   
-                    <input type="number" name="stock"/>
-                </div>
-                <div class="col">
-                    <input type="submit" name="crear" value="Crear" class="btn btn-outline-dark"/>
-                    <input type="reset" name="limpiar" value="Cancelar" class="btn btn-outline-dark"/>
-                </div>
-            </div>     
-        </form>
-        </div>
+        <?php include_once 'crearPieza.php'?>
     </section>
-    <section>
-        
+    <section>        
         <!-- Comunicar mensajes -->
-        <?php
-        if(isset($mensaje)){
-            echo '<div class="container p-5 my-5 border">';            
-            if($mensaje[0]=='e')
-                echo '<h4 class="text-danger">'.$mensaje[1].'</h4>';
-            else
-                echo '<h4 class="text-success">'.$mensaje[1].'</h4>';
-            echo '</div>';
-        }
-        ?>
+        <?php include_once '../verMensaje.php'?>
     </section>
     <section>
-        <div class="container p-2 my-2 border">
-            <!-- Mostrar piezas y dar opción a modificar y borrar -->
-        <?php
-            if($bd->getConexion()!=null){
-                //Obtener piezas
-                $piezas = $bd->obtenerPiezas();
-                //Mostramos las piezas en una tabla
-                ?>
-                <form action="#" method="post">
-                    <table  class="table table-striped">
-                        <thead>
-                            <tr>
-                                <th>Código</th>
-                                <th>Clase</th>
-                                <th>Descrición</th>
-                                <th>Precio</th>
-                                <th>Stock</th>
-                                <th>Acciones</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php
-                            foreach($piezas as $p){
-                                echo '<tr>';
-                                echo '<td>'.$p->getCodigo().'</td>';
-                                echo '<td>'.$p->getClase().'</td>';
-                                echo '<td>'.$p->getDescripcion().'</td>';
-                                echo '<td>'.$p->getPrecio().'</td>';
-                                echo '<td>'.$p->getStock().'</td>';
-                                echo '<td>';
-                                echo '<button type="submit" class="btn btn-outline-dark" name="modif" value="'.$p->getCodigo().'"><img src="../icon/modif25.png"/></button>';
-                                echo '<button type="button" class="btn btn-outline-dark"  data-bs-toggle="modal"  data-bs-target="#a'.$p->getCodigo().'" name="avisar" value="'.$p->getCodigo().'"><img src="../icon/delete25.png"/></button>';
-                                echo'</td>';
-                                echo '</tr>';
-                                
-                                //Definir ventana modal
-                                ?>
-                                <!-- The Modal -->
-                                    <div class="modal" id="a<?php echo $p->getCodigo();?>">
-                                    <div class="modal-dialog">
-                                        <div class="modal-content">
-
-                                        <!-- Modal Header -->
-                                        <div class="modal-header">
-                                            <h4 class="modal-title">Borrar Pieza</h4>
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                                        </div>
-
-                                        <!-- Modal body -->
-                                        <div class="modal-body">
-                                            ¿Está seguro que desea borrar la pieza?
-                                        </div>
-
-                                        <!-- Modal footer -->
-                                        <div class="modal-footer">
-                                            <button type="submit" name="borrar" value="<?php echo $p->getCodigo();?>" class="btn btn-danger" data-bs-dismiss="modal">Borrar</button>
-                                        </div>
-
-                                        </div>
-                                    </div>
-                                    </div>
-                                <?php
-                            }
-                            ?>
-                        </tbody>
-                    </table>
-                </form>
-                <?php
-            }
-        ?>   
-        </div>
-        
+        <!-- Visulzar Piezas -->
+        <?php include_once 'listarPiezas.php'?>        
     </section>
     <footer>
 
