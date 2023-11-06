@@ -1,5 +1,6 @@
 <?php
 require_once 'pieza/Pieza.php';
+require_once 'usuario/Usuario.php';
 
 class Modelo
 {
@@ -18,6 +19,31 @@ class Modelo
         } catch (PDOException $e) {
             echo $e->getMessage();
         }
+    }
+
+    function obtenerUsuario(string $us, string $ps)
+    {
+        $resultado = null;
+        try {
+            $consulta = $this->conexion->prepare('select * from usuarios 
+                            where dni = ? and ps = sha2(?,512)');
+            $params = array($us, $ps);
+            if ($consulta->execute($params)) {
+                //Ver si se ha devuelto 1 registro con el usuario
+                if ($fila = $consulta->fetch()) {
+                    //Se ha encontrado el usuario
+                    $resultado = new Usuario(
+                        $fila['id'],
+                        $fila['dni'],
+                        $fila['nombre'],
+                        $fila['perfil']
+                    );
+                }
+            }
+        } catch (PDOException $e) {
+            echo $e->getMessage();
+        }
+        return $resultado;
     }
 
     function modificarPieza(Pieza $p, string $codigoAntiguo)

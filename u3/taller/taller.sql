@@ -9,7 +9,7 @@ create table usuarios(
     ps blob,
     perfil enum('A','M') default 'M' not null
 )engine innodB;
-insert into usuarios values (default,null,'admin', sha2('admin',0),'A');
+insert into usuarios values (default,'admin','admin', sha2('admin',512),'A');
 
 create table propietario(
 	codigo int auto_increment primary key,
