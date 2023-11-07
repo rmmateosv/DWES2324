@@ -6,7 +6,7 @@ if (isset($_SESSION['usuario'])) {
   $us = $_SESSION['usuario'];
 } else {
   //Redirigir a login
-  header('location:..usuario/login.php');
+  header('location:../usuario/login.php');
 }
 ?>
 <!-- Grey with black text -->
@@ -16,31 +16,32 @@ if (isset($_SESSION['usuario'])) {
       <?php
       if ($us->getPerfil() == 'A') {
         echo '<li class="nav-item">
-                <a class="nav-link active" href="#">Usuarios</a>
+                <a class="nav-link active" href="../usuario/controllerUsuario.php">Usuarios</a>
               </li>';
       }
       ?>
       <li class="nav-item">
-        <a class="nav-link active" href="controllerPieza.php">Piezas</a>
+        <a class="nav-link active" href="../pieza/controllerPieza.php">Piezas</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link active" href="#">Clientes</a>
+        <a class="nav-link active" href="../cliente/controllerCliente.php">Clientes</a>
       </li>
       <?php
       if ($us->getPerfil() == 'M') {
         echo '<li class="nav-item">
-                <a class="nav-link active" href="#">Reparaciones</a>
+                <a class="nav-link active" href="../reparacion/conotrollerReparacion.php">Reparaciones</a>
               </li>';
       }
       ?>
+    </ul>
+    <ul class="navbar-nav ms-auto">
       <li class="nav-item">
-        <?php echo $us->getNombre() ?>
+        <span class="nav-link"><?php echo $us->getNombre() ?></span>
+
       </li>
       <li class="nav-item">
         <a class="nav-link active" href="../usuario/login.php?accion=cerrar">Salir</a>
       </li>
-
-
     </ul>
   </div>
 </nav>
