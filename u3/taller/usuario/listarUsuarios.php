@@ -68,7 +68,7 @@ function marcarOptionSeleccionado($option, $optionSeleccionado)
                         //Definir ventana modal
                     ?>
                         <!-- The Modal -->
-                        <div class="modal" id="a<?php echo $u->getDni(), $u->getNombre(); ?>">
+                        <div class="modal" id="a<?php echo $u->getId(); ?>">
                             <div class="modal-dialog">
                                 <div class="modal-content">
 
@@ -80,7 +80,10 @@ function marcarOptionSeleccionado($option, $optionSeleccionado)
 
                                     <!-- Modal body -->
                                     <div class="modal-body">
-                                        ¿Está seguro que desea borrar el usuario?
+                                        ¿Está seguro que desea borrar el usuario
+                                        <?php
+                                        echo $u->getDni(), '-', $u->getNombre();
+                                        ?>?
                                     </div>
 
                                     <!-- Modal footer -->
