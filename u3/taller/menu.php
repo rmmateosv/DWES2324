@@ -24,7 +24,7 @@ if (isset($_SESSION['usuario'])) {
         <a class="nav-link active" href="../pieza/controllerPieza.php">Piezas</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link active" href="../cliente/controllerCliente.php">Clientes</a>
+        <a class="nav-link active" href="../vehiculo/controllerVehiculo.php">Vehículos</a>
       </li>
       <?php
       if ($us->getPerfil() == 'M') {

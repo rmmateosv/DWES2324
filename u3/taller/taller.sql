@@ -13,18 +13,19 @@ insert into usuarios values (default,'admin','admin', sha2('admin',512),'A');
 
 create table propietario(
 	codigo int auto_increment primary key,
+    dni varchar(9) unique not null,
     nombre varchar(100) not null,
     telefono varchar(9) not null,
     email varchar(320) null
 )engine innodb;
 insert into propietario values
-	(null, 'Paco Pérez','123456789', null),
-    (null, 'Nuria Roca', '675432123','nuriaroca@gmail.com'),
-    (null, 'Pablo Motos', '897665544', 'pablomotos@gmail.com'),
-    (null, 'Mónica Madina','456789123', null),
-    (null, 'Esther Gómez','567891234', null),
-    (null, 'Pedro Picapiedra','678912345', null),
-    (null, 'Bilma Picapiedra','789123456', null);
+	(null, '1A','Paco Pérez','123456789', null),
+    (null, '1C','Nuria Roca', '675432123','nuriaroca@gmail.com'),
+    (null, '1D','Pablo Motos', '897665544', 'pablomotos@gmail.com'),
+    (null, '1E','Mónica Madina','456789123', null),
+    (null, '1F','Esther Gómez','567891234', null),
+    (null, '1G','Pedro Picapiedra','678912345', null),
+    (null, '1H','Bilma Picapiedra','789123456', null);
 create table vehiculo(
 	codigo int auto_increment primary key,
     propietario int not null,
