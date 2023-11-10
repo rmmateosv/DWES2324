@@ -10,6 +10,9 @@ class Propietario
         $this->dni = $dni;
         $this->nombre = $nombre;
         $this->telefono = $telefono;
+        if ($email == null) {
+            $email = '';
+        }
         $this->email = $email;
     }
 
