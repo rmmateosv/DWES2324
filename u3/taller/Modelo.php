@@ -20,6 +20,48 @@ class Modelo
             echo $e->getMessage();
         }
     }
+    function crearPropietario(Propietario $p)
+    {
+        $resultado = false;
+        try {
+            $consulta = $this->conexion->prepare('INSERT into propietario 
+            values(default,?,?,?,?)');
+            $params = array($p->getDni(), $p->getNombre(), $p->getTelefono(), $p->getEmail());
+            if ($consulta->execute($params)) {
+                if ($consulta->rowCount() == 1) {
+                    $resultado = true;
+                    $p->setId($this->conexion->lastInsertId());
+                }
+            }
+        } catch (PDOException $e) {
+            echo $e->getMessage();
+        }
+        return $resultado;
+    }
+
+    function obtenerPropietario($dni)
+    {
+        $resultado = null;
+        try {
+            $consulta = $this->conexion->prepare('SELECT * from propietario 
+            where dni = ?');
+            $params = array($dni);
+            if ($consulta->execute($params)) {
+                if ($fila = $consulta->fetch()) {
+                    $resultado = new Propietario(
+                        $fila['codigo'],
+                        $fila['dni'],
+                        $fila['nombre'],
+                        $fila['telefono'],
+                        $fila['email']
+                    );
+                }
+            }
+        } catch (PDOException $e) {
+            echo $e->getMessage();
+        }
+        return $resultado;
+    }
     function obtenerPropietarios()
     {
         $resultado = array();

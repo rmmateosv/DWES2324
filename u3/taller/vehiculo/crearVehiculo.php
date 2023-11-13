@@ -28,13 +28,10 @@
                 <button type="button" name="crearP" class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#crearPropietario">+</button>
             </div>
             <div class="col">
-                <input type="text" name="nombre" placeholder="Nombre Usuario" />
+                <input type="text" name="matricula" placeholder="1234AAA" pattern="[0-9]{4}[A-Z]{3}" />
             </div>
             <div class="col">
-                <select name="perfil" class="form-select form-select-sm">
-                    <option value="A">Administrador</option>
-                    <option value="M">Mecánico</option>
-                </select>
+                <input type="color" name="color" />
             </div>
             <div class="col">
                 <input type="submit" name="crear" value="Crear" class="btn btn-outline-dark" />

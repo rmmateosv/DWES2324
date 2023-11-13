@@ -15,9 +15,38 @@ if ($bd->getConexion() == null) {
     session_write_close();
     //Botón crear
     if (isset($_POST['crear'])) {
-        if (false) {
+        if (
+            empty($_POST['propietario']) or empty($_POST['matricula']) or
+            empty($_POST['color'])
+        ) {
             $mensaje = array('e', 'Debe rellenar todos los campos');
         } else {
+            //Comprobar que no existe otro vehículo con la misma matrícula
+
+        }
+    } elseif (isset($_POST['insertP'])) {
+        if (empty($_POST['dni']) or empty($_POST['telefono']) or empty($_POST['nombre'])) {
+            $mensaje = array('e', 'Debe rellenar todos los campos');
+        } else {
+            //Comprobar que no hay otro propietario con el mismo dni
+            $p = $bd->obtenerPropietario($_POST['dni']);
+            if ($p == null) {
+                //Crear propietario
+                $p = new Propietario(
+                    0,
+                    $_POST['dni'],
+                    $_POST['nombre'],
+                    $_POST['telefono'],
+                    $_POST['email']
+                );
+                if ($bd->crearPropietario($p)) {
+                    $mensaje = array('i', 'Propietario creado con código:' . $p->getId());
+                } else {
+                    $mensaje = array('e', 'Se ha producido un error al crear el propietario');
+                }
+            } else {
+                $mensaje = array('e', 'Error, ya existe propietario con ese dni');
+            }
         }
     } elseif (isset($_POST['update'])) {
     } elseif (isset($_POST['borrar'])) {
