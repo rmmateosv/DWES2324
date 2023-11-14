@@ -35,6 +35,7 @@
             </div>
             <div class="col">
                 <input type="submit" name="crear" value="Crear" class="btn btn-outline-dark" />
+                <input type="submit" name="mostrarV" value="Vehículos" class="btn btn-outline-dark" />
                 <input type="reset" name="limpiar" value="Cancelar" class="btn btn-outline-dark" />
             </div>
         </div>
