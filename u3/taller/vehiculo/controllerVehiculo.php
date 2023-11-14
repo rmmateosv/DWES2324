@@ -62,6 +62,8 @@ if ($bd->getConexion() == null) {
     } elseif (isset($_POST['mostrarV'])) {
         //Crear una variable de sesión con el propietario
         $_SESSION['propietario'] = $_POST['propietario'];
+    } elseif ($_POST["mostrarR"]) {
+        $_SESSION['vehiculo'] = $_POST['mostrarR'];
     } elseif (isset($_POST['borrar'])) {
     }
     session_write_close();
@@ -99,7 +101,7 @@ if ($bd->getConexion() == null) {
     </section>
     <section>
         <!-- Seleccionar / Visulizar datos de reparaciones -->
-        <?php include_once 'datosReparaciones.php' ?>
+        <?php include_once '../reparacion/datosReparaciones.php' ?>
     </section>
     <footer>
 
