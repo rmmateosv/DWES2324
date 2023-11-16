@@ -45,6 +45,7 @@ if ($bd->getConexion() == null) {
 </head>
 
 <body>
+    aaa
     <h1>Taller Augustóbriga</h1>
     <div class="container-md mt-5 p-5 border w-25">
         <!-- Login -->
