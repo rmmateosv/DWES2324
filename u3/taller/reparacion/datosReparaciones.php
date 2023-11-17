@@ -9,8 +9,7 @@
             <table class="table table-striped">
                 <thead>
                     <tr>
-                        <th>Id</th>
-                        <th>Coche</th>
+                        <th>Id</th> 
                         <th>Fecha</th>
                         <th>HorasTaller</th>
                         <th>Pagado</th>
@@ -23,26 +22,31 @@
                     <?php
                     foreach ($reparaciones as $r) {
                         echo '<tr>';
-                        if (isset($_POST['modif']) and $_POST['modif'] == $r->getId()) {
+                        if (isset($_POST['modifR']) and $_POST['modifR'] == $r->getId()) {
                             //Pintar campos para poder modificar
                             echo '<td> <input type="text" name="id" disabled="disabled" value="' . $r->getId() . '"/></td>';
-                            echo '<td> <input type="text" name="matricula" value="' . $r->getMatricula() . '"/></td>';
-                            echo '<td> <input type="color" name="color" value="' . $r->getColor() . '"/></td>';
+                            echo '<td> <input type="text" name="fecha" disabled="disabled"  value="' . date('d/m/Y H:i',strtotime($r->getFecha()))  . '"/></td>';
+                            echo '<td> <input type="number" name="horas"  step ="0.1" value="' . $r->getTiempo() . '"/></td>';
+                            echo '<td> <input type="checkbox" name="pagado" ' . 
+                             ($r->getPagado()?'checked="checked"':'') . '/></td>';
+                            echo '<td> <input type="text" name="usuario" disabled="disabled"  
+                                  value="' . $bd->obtenerUsuarioId($r->getUsuario())->getNombre()  . '"/></td>';
+                            echo '<td> <input type="number" name="precioH"  step ="0.1" value="' . $r->getPrecioH() . '"/></td>';
                             echo '<td>';
                             echo '<button type="submit" class="btn btn-outline-dark" name="update" value="' . $r->getId() . '">Guardar</button>';
                             echo '<button type="submit" class="btn btn-outline-dark" name="cancelar">Cancelar</button>';
                             echo '</td>';
                         } else {
                             echo '<td>' . $r->getId() . '</td>';
-                            echo '<td>' . $r->getCoche() . '</td>';
-                            echo '<td>' . $r->getFecha() . '</td>';
+                            echo '<td>' . date('d/m/Y H:i',strtotime($r->getFecha())) . '</td>';
                             echo '<td>' . $r->getTiempo() . '</td>';
-                            echo '<td>' . $r->getPagado() . '</td>';
-                            echo '<td>' . $r->getUsuario() . '</td>';
+                            echo '<td><input type="checkbox" disabled="disabled"' . 
+                             ($r->getPagado()?'checked="checked"':'') . '/></td>';
+                            echo '<td>' . $bd->obtenerUsuarioId($r->getUsuario())->getNombre() . '</td>';
                             echo '<td>' . $r->getPrecioH() . '</td>';
                             echo '<td>';
-                            echo '<button type="submit" class="btn btn-outline-dark" name="modif" value="' . $r->getId()  . '"><img src="../icon/modif25.png"/></button>';
-                            echo '<button type="button" class="btn btn-outline-dark"  data-bs-toggle="modal"  data-bs-target="#a' . $r->getId() . '" name="avisar" value="' . $r->getId() . '"><img src="../icon/delete25.png"/></button>';
+                            echo '<button type="submit" class="btn btn-outline-dark" name="modifR" value="' . $r->getId()  . '"><img src="../icon/modif25.png"/></button>';
+                            echo '<button type="button" class="btn btn-outline-dark"  data-bs-toggle="modal"  data-bs-target="#r' . $r->getId() . '" name="avisar" value="' . $r->getId() . '"><img src="../icon/delete25.png"/></button>';
                             echo '<button type="submit" class="btn btn-outline-dark" name="mostrarR" value="' . $r->getId()  . '">Ver</button>';
                             echo '</td>';
                         }
@@ -51,7 +55,7 @@
                         //Definir ventana modal
                     ?>
                         <!-- The Modal -->
-                        <div class="modal" id="a<?php echo $r->getId(); ?>">
+                        <div class="modal" id="r<?php echo $r->getId(); ?>">
                             <div class="modal-dialog">
                                 <div class="modal-content">
 
@@ -68,7 +72,7 @@
                                         echo $r->getId();
                                         ?> del coche 
                                         <?php 
-                                        $bd->obtenerVehiculoId($r->getCoche())->getMatricula()?>?
+                                        echo $bd->obtenerVehiculoId($r->getCoche())->getMatricula();?>?
                                     </div>
 
                                     <!-- Modal footer -->
