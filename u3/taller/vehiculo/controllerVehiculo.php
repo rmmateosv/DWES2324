@@ -70,13 +70,13 @@ if ($bd->getConexion() == null) {
         $r = new Reparacion(
             0,
             $_SESSION['vehiculo'],
-            time(),
+            null,
             0,
             false,
             $_SESSION['usuario']->getId(),
             0
         );
-        if ($bd->crearReparacion(r)) {
+        if ($bd->crearReparacion($r)) {
             $mensaje = array('i', 'Reparación creada con código ' . $r->getId());
         } else {
             $mensaje = array('e', 'Se ha producido un error al crear la reparación');
