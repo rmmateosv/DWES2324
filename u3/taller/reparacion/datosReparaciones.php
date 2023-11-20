@@ -6,10 +6,11 @@
         //Mostramos los vehículos en una tabla
     ?>
         <form action="" method="post">
+            <input type="submit" name="crearR" class="btn btn-outline-dark" value="+" />
             <table class="table table-striped">
                 <thead>
                     <tr>
-                        <th>Id</th> 
+                        <th>Id</th>
                         <th>Fecha</th>
                         <th>HorasTaller</th>
                         <th>Pagado</th>
@@ -25,10 +26,10 @@
                         if (isset($_POST['modifR']) and $_POST['modifR'] == $r->getId()) {
                             //Pintar campos para poder modificar
                             echo '<td> <input type="text" name="id" disabled="disabled" value="' . $r->getId() . '"/></td>';
-                            echo '<td> <input type="text" name="fecha" disabled="disabled"  value="' . date('d/m/Y H:i',strtotime($r->getFecha()))  . '"/></td>';
+                            echo '<td> <input type="text" name="fecha" disabled="disabled"  value="' . date('d/m/Y H:i', strtotime($r->getFecha()))  . '"/></td>';
                             echo '<td> <input type="number" name="horas"  step ="0.1" value="' . $r->getTiempo() . '"/></td>';
-                            echo '<td> <input type="checkbox" name="pagado" ' . 
-                             ($r->getPagado()?'checked="checked"':'') . '/></td>';
+                            echo '<td> <input type="checkbox" name="pagado" ' .
+                                ($r->getPagado() ? 'checked="checked"' : '') . '/></td>';
                             echo '<td> <input type="text" name="usuario" disabled="disabled"  
                                   value="' . $bd->obtenerUsuarioId($r->getUsuario())->getNombre()  . '"/></td>';
                             echo '<td> <input type="number" name="precioH"  step ="0.1" value="' . $r->getPrecioH() . '"/></td>';
@@ -38,10 +39,10 @@
                             echo '</td>';
                         } else {
                             echo '<td>' . $r->getId() . '</td>';
-                            echo '<td>' . date('d/m/Y H:i',strtotime($r->getFecha())) . '</td>';
+                            echo '<td>' . date('d/m/Y H:i', strtotime($r->getFecha())) . '</td>';
                             echo '<td>' . $r->getTiempo() . '</td>';
-                            echo '<td><input type="checkbox" disabled="disabled"' . 
-                             ($r->getPagado()?'checked="checked"':'') . '/></td>';
+                            echo '<td><input type="checkbox" disabled="disabled"' .
+                                ($r->getPagado() ? 'checked="checked"' : '') . '/></td>';
                             echo '<td>' . $bd->obtenerUsuarioId($r->getUsuario())->getNombre() . '</td>';
                             echo '<td>' . $r->getPrecioH() . '</td>';
                             echo '<td>';
@@ -70,9 +71,9 @@
                                         ¿Está seguro que desea borrar la reparación nº
                                         <?php
                                         echo $r->getId();
-                                        ?> del coche 
-                                        <?php 
-                                        echo $bd->obtenerVehiculoId($r->getCoche())->getMatricula();?>?
+                                        ?> del coche
+                                        <?php
+                                        echo $bd->obtenerVehiculoId($r->getCoche())->getMatricula(); ?>?
                                     </div>
 
                                     <!-- Modal footer -->
