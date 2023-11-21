@@ -62,15 +62,17 @@ if ($bd->getConexion() == null) {
     } elseif (isset($_POST['mostrarV'])) {
         //Crear una variable de sesión con el propietario
         $_SESSION['propietario'] = $_POST['propietario'];
+        //Limpiamos el vehículo seleccionado de la sesión
+        unset($_SESSION['vehiculo']);
     } elseif (isset($_POST["mostrarR"])) {
         $_SESSION['vehiculo'] = $_POST['mostrarR'];
     } elseif (isset($_POST['borrar'])) {
-    } elseif (isset($_POST['creaR'])) {
+    } elseif (isset($_POST['crearR'])) {
         //Crear reparación para vehículo en $_SESSION
         $r = new Reparacion(
             0,
             $_SESSION['vehiculo'],
-            null,
+            time(),
             0,
             false,
             $_SESSION['usuario']->getId(),
