@@ -32,6 +32,7 @@ class Modelo
             if ($consulta->execute($params)) {
                 if ($consulta->rowCount() == 1) {
                     $resultado = true;
+                    $r->setId($this->conexion->lastInsertId());
                 }
             }
         } catch (PDOException $e) {
@@ -44,7 +45,7 @@ class Modelo
         $resultado = array();
         try {
             $consulta = $this->conexion->prepare(
-                "select * from reparacion where coche = ?"
+                "select * from reparacion where coche = ? order by fechaHora desc"
             );
             $params = array($idV);
             if ($consulta->execute($params)) {

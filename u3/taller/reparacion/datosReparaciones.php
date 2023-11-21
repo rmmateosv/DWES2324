@@ -7,6 +7,7 @@
     ?>
         <form action="" method="post">
             <input type="submit" name="crearR" class="btn btn-outline-dark" value="+" />
+            
             <table class="table table-striped">
                 <thead>
                     <tr>
