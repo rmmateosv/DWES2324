@@ -35,7 +35,7 @@
                                   value="' . $bd->obtenerUsuarioId($r->getUsuario())->getNombre()  . '"/></td>';
                             echo '<td> <input type="number" name="precioH"  step ="0.1" value="' . $r->getPrecioH() . '"/></td>';
                             echo '<td>';
-                            echo '<button type="submit" class="btn btn-outline-dark" name="update" value="' . $r->getId() . '">Guardar</button>';
+                            echo '<button type="submit" class="btn btn-outline-dark" name="updateR" value="' . $r->getId() . '">Guardar</button>';
                             echo '<button type="submit" class="btn btn-outline-dark" name="cancelar">Cancelar</button>';
                             echo '</td>';
                         } else {
