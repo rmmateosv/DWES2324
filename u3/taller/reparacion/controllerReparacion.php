@@ -37,6 +37,12 @@ if ($bd->getConexion() == null) {
                                         $pieza->getCodigo());
                 if($pr==null){
                     //Insert
+                    if($bd->insertarPR($_SESSION['reparacion'],$pieza,$_POST['cantidad'])){
+                        $mensaje = array('i', 'Pieza insertada');
+                    }
+                    else{
+                        $mensaje = array('e', 'Error al insertar la pieza');
+                    }
                 }
                 else{
                     //Update
