@@ -4,6 +4,7 @@ require_once 'usuario/Usuario.php';
 require_once 'vehiculo/Propietario.php';
 require_once 'vehiculo/Vehiculo.php';
 require_once 'reparacion/Reparacion.php';
+require_once 'reparacion/PiezaReparacion.php';
 class Modelo
 {
 
@@ -21,6 +22,36 @@ class Modelo
         } catch (PDOException $e) {
             echo $e->getMessage();
         }
+    }
+    function obtenerPiezaReparacion($idRep,$codigoP){
+        $resultado = null;
+        try {
+            $consulta = $this->conexion->prepare(
+                'select * from piezareparacion as pr 
+                inner join pieza p on pr.pieza = p.codigo 
+                inner join reparacion r on pr.reparacion = r.id 
+                where pr.reparacion = ? and pr.pieza = ?');
+            $params = array($idRep, $codigoP);
+            if($consulta->execute()){
+                if($consulta->rowCount()==1){
+                    $fila=$consulta->fetch();
+                    $pieza = new Pieza();
+                    
+                    $resultado = new PiezaReparacion(
+                        new Reparacion($fila['id'],$fila['coche'],$fila['fechaHora'],
+                                       $fila['tiempo'],$fila['pagado'],$fila['usuario'],
+                                       $fila['precioH']),
+                        new Pieza($fila['codigo'],$fila['clase'],$fila['descripcion'],
+                                    $fila['precio'],$fila['stock']),
+                        $fila['cantidad'],
+                        $fila['precio']
+                    );
+                }
+            }
+        } catch (PDOException $e) {
+            echo $e->getMessage();
+        }
+        return $resultado;
     }
     function modificarReparacion(int $id, float $horas,bool $pagado,float $precioH)
     {

@@ -33,7 +33,14 @@ if ($bd->getConexion() == null) {
                 //Si la pieza ya se ha usado en esa reparación
                 //hay que hacer un update en piezareparación e incrementar la cantidad
                 //Si no se ha usado, hay que hacer un insertar piezareparación
-                
+                $pr = $bd->obtenerPiezaReparacion($_SESSION['reparacion'],
+                                        $pieza->getCodigo());
+                if($pr==null){
+                    //Insert
+                }
+                else{
+                    //Update
+                }
             }
         }
         
