@@ -17,9 +17,26 @@ if ($bd->getConexion() == null) {
     }
 
     //Botón crear
-    if (isset($_POST['crear'])) {
+    if (isset($_POST['crearPR'])) {
         //Crear Pieza en reparación
-
+        //Chequear que estén rellenos la pieza y la cantidad y que no sea negativa
+        if(empty($_POST['pieza']) or empty($_POST['cantidad']) or $_POST['cantidad']<1){
+            $mensaje = array('e', 'Error, hay que relleanar todos los datos y la cantidad debe ser +');
+        }
+        else{
+            //Chequear que haya stock
+            $pieza = $bd->obtenerPieza($_POST['pieza']);
+            if($pieza->getStock()<$_POST['cantidad']){
+                $mensaje = array('e', 'Error, no hay stock suficiente');
+            }
+            else{
+                //Si la pieza ya se ha usado en esa reparación
+                //hay que hacer un update en piezareparación e incrementar la cantidad
+                //Si no se ha usado, hay que hacer un insertar piezareparación
+                
+            }
+        }
+        
     } 
     elseif(isset($_POST['update'])){
        //Modificar pieza en reparación
