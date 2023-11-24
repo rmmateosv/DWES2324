@@ -49,7 +49,7 @@
                             echo '<td>';
                             echo '<button type="submit" class="btn btn-outline-dark" name="modifR" value="' . $r->getId()  . '"><img src="../icon/modif25.png"/></button>';
                             echo '<button type="button" class="btn btn-outline-dark"  data-bs-toggle="modal"  data-bs-target="#r' . $r->getId() . '" name="avisar" value="' . $r->getId() . '"><img src="../icon/delete25.png"/></button>';
-                            echo '<button type="submit" class="btn btn-outline-dark" name="mostrarR" value="' . $r->getId()  . '">Ver</button>';
+                            echo '<button type="submit" class="btn btn-outline-dark" name="datosR" value="' . $r->getId()  . '">Ver</button>';
                             echo '</td>';
                         }
                         echo '</tr>';
