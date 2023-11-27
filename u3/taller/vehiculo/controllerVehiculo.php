@@ -82,7 +82,71 @@ if ($bd->getConexion() == null) {
         }
     }
     elseif (isset($_POST['borrar'])) {
-    } elseif (isset($_POST['crearR'])) {
+        //Borrar vehículo
+        $v = $bd->obtenerVehiculoId($_POST['borrar']);
+        //Si hay reparaciones no se puede borrar
+        $reparaciones = $bd->obtenerReparaciones($_POST['borrar']);
+        if(sizeof($reparaciones)>0){
+            $mensaje = array('e', 'Error, no se puede borrar porque hay reparaciones');
+        }
+        else{
+            if($bd->borrarVehiculo($_POST['borrar'])){
+                if($_SESSION['vehiculo']==$_POST['borrar']){
+                    unset($_SESSION['vehiculo']);
+                    unset($_SESSION['reparacion']);
+                }
+                
+                $mensaje = array('i', 'Vehículo borrado');
+            }        
+            else{
+                $mensaje = array('e', 'Error al borrar el vehículo');
+            }
+        }
+    } 
+    elseif (isset($_POST['update'])) {
+        //Modificar vehículo
+        $v = $bd->obtenerVehiculoId($_POST['update']);
+        //Comprobar que no hay un vehículo si se cambia la matrícula
+        if($_POST['matricula']!=$v->getMatricula()){
+            if($bd->obtenerVehiculo($_POST['matricula'])!=null){
+                $existe=true;
+            }
+        }  
+        if(!isset($existe)){ 
+            $v->setMatricula($_POST['matricula']);
+            $v->setColor($_POST['color']);
+            if($bd->modificarVehiculo($v)){
+                $mensaje = array('i', 'Vehículo modificado');
+            }        
+            else{
+                $mensaje = array('e', 'Error al modidficar el vehículo');
+            }
+        }
+        else{
+            $mensaje = array('e', 'Error ya existe la matrícula');
+        }
+        
+    }
+    elseif (isset($_POST['borrarR'])) {
+        //Borrar reparación
+        $r = $bd->obtenerReparacion($_POST['borrarR']);
+        //Si hay piezas en la reparación no se puede borrar
+        $piezas = $bd->obtenerPiezasReparacion($_POST['borrarR']);
+        if(sizeof($piezas)>0){
+            $mensaje = array('e', 'Error, no se puede borrar porque hay piezas en la reparación');
+        }
+        else{
+            if($bd->borrarReparacion($_POST['borrarR'])){
+                if($_POST['borrarR']==$_SESSION['reparacion'])
+                    unset($_SESSION['reparacion']);
+                $mensaje = array('i', 'REparaciónn borrada');
+            }        
+            else{
+                $mensaje = array('e', 'Error al borrar la reparación');
+            }
+        }
+    }
+    elseif (isset($_POST['crearR'])) {
         //Crear reparación para vehículo en $_SESSION
         $r = new Reparacion(
             0,

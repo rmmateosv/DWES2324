@@ -46,6 +46,13 @@ if ($bd->getConexion() == null) {
                 }
                 else{
                     //Update
+                     if($bd->modificarPR($_SESSION['reparacion'],$pieza,$_POST['cantidad'])){
+                        $mensaje = array('i', 'Pieza modificada');
+                    }
+                    else{
+                        $mensaje = array('e', 'Error al modificar la pieza');
+                    }
+
                 }
             }
         }
@@ -53,9 +60,35 @@ if ($bd->getConexion() == null) {
     } 
     elseif(isset($_POST['update'])){
        //Modificar pieza en reparación
+       //Obtener pieza a modicar
+       $pr = $bd->obtenerPiezaReparacion($_SESSION['reparacion'],$_POST['update']);
+       if($pr!=null){
+            if($bd->modificarCantidad($pr,$_POST['cantidad'])){
+                $mensaje = array('i', 'Pieza modificada');
+            }
+            else{
+                $mensaje = array('e', 'Error, no se ha modificado la pieza');
+            }
+       }
+       else{
+        $mensaje = array('e', 'Error, no existe la pieza en la reparación');
+       }
     }
     elseif (isset($_POST['borrar'])) {
          //Borrar pieza en reparación
+       //Obtener pieza a borrar
+       $pr = $bd->obtenerPiezaReparacion($_SESSION['reparacion'],$_POST['borrar']);
+       if($pr!=null){
+            if($bd->borrarPiezaRep($pr)){
+                $mensaje = array('i', 'Pieza borrada');
+            }
+            else{
+                $mensaje = array('e', 'Error, no se ha borrrado la pieza');
+            }
+       }
+       else{
+        $mensaje = array('e', 'Error, no existe la pieza en la reparación');
+       }
     } 
     session_write_close();
 }
@@ -94,7 +127,7 @@ if ($bd->getConexion() == null) {
     </section>
     <section>
         <!-- Seleccionar / Visulizar datos de vehículo -->
-        <?php include_once 'datosPieza.php' ?>
+        <?php include_once 'datosPiezas.php' ?>
     </section>
     
     <footer>

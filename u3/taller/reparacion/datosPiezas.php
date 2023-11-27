@@ -11,50 +11,52 @@ function marcarClaseSeleccionada($clase, $clasePieza)
     <?php
     if ($bd->getConexion() != null) {
         //Obtener piezas
-        $piezas = $bd->obtenerPiezas();
+        $piezas = $bd->obtenerPiezasReparacion($_SESSION['reparacion']);
         //Mostramos las piezas en una tabla
     ?>
         <form action="#" method="post">
             <table class="table table-striped">
                 <thead>
                     <tr>
-                        <th>Código</th>
+                        <th>Código Pieza</th>
                         <th>Clase</th>
-                        <th>Descrición</th>
-                        <th>Precio</th>
-                        <th>Stock</th>
+                        <th>Descripción</th>
+                        <th>Cantidad</th>
+                        <th>Precio Unitario</th>
+                        <th>Importe</th>
                         <th>Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
                     <?php
-                    foreach ($piezas as $p) {
+                    foreach ($piezas as $pr) {
+                        //$pr = new PiezaReparacion();
                         echo '<tr>';
-                        if (isset($_POST['modif']) and $_POST['modif'] == $p->getCodigo()) {
+                        if (isset($_POST['modif']) and $_POST['modif'] == $pr->getP()->getCodigo()) {
                             //Pintar campos para poder modificar
-                            echo '<td> <input type="text" name="codigo" maxlenght="3" value="' . $p->getCodigo() . '"/></td>';
-                            echo '<td><select name="clase">';
-                            echo '<option ' . marcarClaseSeleccionada('Refrigeración', $p->getClase()) . '>Refrigeración</option>';
-                            echo '<option ' . marcarClaseSeleccionada('Filtro', $p->getClase()) . '>Filtro</option>';
-                            echo '<option ' . marcarClaseSeleccionada('Motor', $p->getClase()) . '>Motor</option>';
-                            echo '<option ' . marcarClaseSeleccionada('Otros', $p->getClase()) . '>Otros</option>';
-                            echo '</select></td>';
-                            echo '<td> <input type="text" name="desc" value="' . $p->getDescripcion() . '"/></td>';
-                            echo '<td> <input type="number" name="precio" step="0.01" value="' . $p->getPrecio() . '"/></td>';
-                            echo '<td> <input type="number" name="stock" value="' . $p->getStock() . '"/></td>';
+                            echo '<td> <input type="text" name="codigo" disabled="disabled" value="' . $pr->getP()->getCodigo() . '"/></td>';
+                            echo '<td> <input type="text" name="clase"  disabled="disabled" value="' . $pr->getP()->getClase() . '"/></td>';
+                            echo '<td> <input type="text" name="descripcion"  disabled="disabled" value="' . $pr->getP()->getDescripcion() . '"/></td>';
+                            echo '<td> <input type="number" name="cantidad" value="' . $pr->getCantidad() . '"/></td>';
+                            echo '<td> <input type="number" name="precio" step="0.01" value="' . $pr->getPrecio() . '" disabled="disabled" /></td>';
+                            echo '<td></td>';
                             echo '<td>';
-                            echo '<button type="submit" class="btn btn-outline-dark" name="update" value="' . $p->getCodigo() . '">Guardar</button>';
+                            echo '<button type="submit" class="btn btn-outline-dark" name="update" value="' . $pr->getP()->getCodigo() . '">Guardar</button>';
                             echo '<button type="submit" class="btn btn-outline-dark" name="cancelar">Cancelar</button>';
                             echo '</td>';
                         } else {
-                            echo '<td>' . $p->getCodigo() . '</td>';
-                            echo '<td>' . $p->getClase() . '</td>';
-                            echo '<td>' . $p->getDescripcion() . '</td>';
-                            echo '<td>' . $p->getPrecio() . '</td>';
-                            echo '<td>' . $p->getStock() . '</td>';
+                            echo '<td>' . $pr->getP()->getCodigo() . '</td>';
+                            echo '<td>' . $pr->getP()->getClase() . '</td>';
+                            echo '<td>' . $pr->getP()->getDescripcion() . '</td>';
+                            echo '<td>' . $pr->getCantidad() . '</td>';
+                            echo '<td>' . $pr->getPrecio() . '</td>';
+                            echo '<td>' . $pr->getCantidad()*$pr->getPrecio() . '</td>';
                             echo '<td>';
-                            echo '<button type="submit" class="btn btn-outline-dark" name="modif" value="' . $p->getCodigo() . '"><img src="../icon/modif25.png"/></button>';
-                            echo '<button type="button" class="btn btn-outline-dark"  data-bs-toggle="modal"  data-bs-target="#a' . $p->getCodigo() . '" name="avisar" value="' . $p->getCodigo() . '"><img src="../icon/delete25.png"/></button>';
+                            echo '<button type="submit" class="btn btn-outline-dark" name="modif" value="' . 
+                                   $pr->getP()->getCodigo() . '"><img src="../icon/modif25.png"/></button>';
+                            echo '<button type="button" class="btn btn-outline-dark"  data-bs-toggle="modal"  
+                                 data-bs-target="#a' . $pr->getP()->getCodigo() . '" name="avisar" 
+                                 value="' . $pr->getP()->getCodigo() . '"><img src="../icon/delete25.png"/></button>';
                             echo '</td>';
                         }
                         echo '</tr>';
@@ -62,7 +64,7 @@ function marcarClaseSeleccionada($clase, $clasePieza)
                         //Definir ventana modal
                     ?>
                         <!-- The Modal -->
-                        <div class="modal" id="a<?php echo $p->getCodigo(); ?>">
+                        <div class="modal" id="a<?php echo $pr->getP()->getCodigo(); ?>">
                             <div class="modal-dialog">
                                 <div class="modal-content">
 
@@ -79,7 +81,9 @@ function marcarClaseSeleccionada($clase, $clasePieza)
 
                                     <!-- Modal footer -->
                                     <div class="modal-footer">
-                                        <button type="submit" name="borrar" value="<?php echo $p->getCodigo(); ?>" class="btn btn-danger" data-bs-dismiss="modal">Borrar</button>
+                                        <button type="submit" name="borrar" 
+                                        value="<?php echo $pr->getP()->getCodigo(); ?>" 
+                                        class="btn btn-danger" data-bs-dismiss="modal">Borrar</button>
                                     </div>
 
                                 </div>
