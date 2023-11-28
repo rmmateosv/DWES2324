@@ -23,6 +23,24 @@ class Modelo
             echo $e->getMessage();
         }
     }
+    function pagarR($idR)
+    {
+        $resultado = false;
+        try {
+            //Ejecución de función
+            $consulta = $this->conexion->prepare('SELECT pagarReparacion(?) as total' );
+            $params=array($idR);
+            if($consulta->execute($params)){
+                if($fila=$consulta->fetch()){
+                    $resultado = true;
+                    $total = $fila['total']; //ESta es la forma de recuperar lo que devuelve la función
+                }
+            }
+        } catch (PDOException $e) {
+            echo $e->getMessage();
+        }
+        return $resultado;
+    }    
     function borrarPiezaRep($pr){
         $resultado = false;
         try {
@@ -208,7 +226,7 @@ class Modelo
                     $pr = new PiezaReparacion(
                         new Reparacion($fila['id'],$fila['coche'],$fila['fechaHora'],
                                        $fila['tiempo'],$fila['pagado'],$fila['usuario'],
-                                       $fila['precioH']),
+                                       $fila['precioH'],$fila['importeTotal']),
                         $pieza,
                         $fila['cantidad'],
                         $fila['precio']
@@ -241,7 +259,7 @@ class Modelo
                     $resultado = new PiezaReparacion(
                         new Reparacion($fila['id'],$fila['coche'],$fila['fechaHora'],
                                        $fila['tiempo'],$fila['pagado'],$fila['usuario'],
-                                       $fila['precioH']),
+                                       $fila['precioH'],$fila['importeTotal']),
                         $pieza,
                         $fila['cantidad'],
                         $fila['precio']
@@ -274,7 +292,7 @@ class Modelo
         $resultado = false;
         try {
             $consulta = $this->conexion->prepare("insert into reparacion values 
-            (default,?,now(),0,false,?,0)");
+            (default,?,now(),0,false,?,0,0)");
             $params = array($r->getCoche(), $r->getUsuario());
             if ($consulta->execute($params)) {
                 if ($consulta->rowCount() == 1) {
@@ -304,7 +322,8 @@ class Modelo
                         $fila["tiempo"],
                         $fila["pagado"],
                         $fila["usuario"],
-                        $fila["precioH"]
+                        $fila["precioH"],
+                        $fila['importeTotal']
                     );
                 }
             }
@@ -346,7 +365,8 @@ class Modelo
                         $fila["tiempo"],
                         $fila["pagado"],
                         $fila["usuario"],
-                        $fila["precioH"]
+                        $fila["precioH"],
+                        $fila['importeTotal']
                     );
                     //Añadir reparación a array resultado
                     $resultado[] = $r;

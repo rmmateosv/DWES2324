@@ -155,12 +155,20 @@ if ($bd->getConexion() == null) {
             0,
             false,
             $_SESSION['usuario']->getId(),
-            0
+            0, 0
         );
         if ($bd->crearReparacion($r)) {
             $mensaje = array('i', 'Reparación creada con código ' . $r->getId());
         } else {
             $mensaje = array('e', 'Se ha producido un error al crear la reparación');
+        }
+    }
+    elseif(isset($_POST['pagarR'])){
+        if($bd->pagarR($_POST['pagarR'])){
+            $mensaje = array('i', 'Reparación pagada ' . $r->getId());
+        }
+        else {
+            $mensaje = array('e', 'Se ha producido un error al pagar la reparación');
         }
     }
     session_write_close();
