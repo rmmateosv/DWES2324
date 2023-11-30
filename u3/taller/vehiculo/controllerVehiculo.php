@@ -1,5 +1,6 @@
 <?php
 require_once '../Modelo.php';
+require_once '../correo.php';
 $bd = new Modelo();
 if ($bd->getConexion() == null) {
     $mensaje = array('e', 'Error, no hay conexión con la bd');
@@ -164,11 +165,22 @@ if ($bd->getConexion() == null) {
         }
     }
     elseif(isset($_POST['pagarR'])){
+        //FALTA CHEQUEO DE SI LA REPARACIÓN EXISTE Y NO ESTÁ PAGADA
         if($bd->pagarR($_POST['pagarR'])){
-            $mensaje = array('i', 'Reparación pagada ' . $r->getId());
+            $mensaje = array('i', 'Reparación pagada ');
         }
         else {
             $mensaje = array('e', 'Se ha producido un error al pagar la reparación');
+        }
+    }
+    elseif(isset($_POST['enviarR'])){
+        $r = $bd->obtenerReparacion($_POST['enviarR']);
+        if($r!=null and $r->getPagado()){
+            $detalle = $bd->obtenerDetalleReparacion($r->getId());
+            enviarCorreo($r,$detalle);
+        }
+        else{
+            $mensaje = array('e', 'Reparción no existe o no está pagada');
         }
     }
     session_write_close();

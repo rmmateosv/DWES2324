@@ -23,6 +23,29 @@ class Modelo
             echo $e->getMessage();
         }
     }
+    function obtenerDetalleReparacion($idR){
+        $resultado = array();
+        try {
+            $consulta = $this->conexion->prepare('call generarFactura(?)');
+            $params=array($idR);
+            if($consulta->execute($params)){
+                //REcuperar el resultado del select de reparación
+                if($fila=$consulta->fetch()){
+                    $resultado[]=array('Concepto'=>$fila['descripcion'], 'Cantidad'=>$fila['cantidad'],
+                    'Importe'=>$fila['importe'], 'Total'=>$fila['total']);
+                }
+                //REcuperar el resultado del select de piezareparacion
+                $consulta->nextRowset();
+                while($fila=$consulta->fetch()){
+                    $resultado[]=array('Concepto'=>$fila['descripcion'], 'Cantidad'=>$fila['cantidad'],
+                    'Importe'=>$fila['importe'], 'Total'=>$fila['total']);
+                }
+            }
+        } catch (PDOException $e) {
+            echo $e->getMessage();
+        }
+        return $resultado;
+    }
     function pagarR($idR)
     {
         $resultado = false;
@@ -33,7 +56,9 @@ class Modelo
             if($consulta->execute($params)){
                 if($fila=$consulta->fetch()){
                     $resultado = true;
-                    $total = $fila['total']; //ESta es la forma de recuperar lo que devuelve la función
+                    //En no usamos el total que devuelve la función pero
+                    //esta es la forma de recuperar lo que devuelve la función
+                    $total = $fila['total']; 
                 }
             }
         } catch (PDOException $e) {
