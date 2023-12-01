@@ -523,7 +523,29 @@ class Modelo
         }
         return $resultado;
     }
-
+    function obtenerPropietarioId($id)
+    {
+        $resultado = null;
+        try {
+            $consulta = $this->conexion->prepare('SELECT * from propietario 
+            where codigo = ?');
+            $params = array($id);
+            if ($consulta->execute($params)) {
+                if ($fila = $consulta->fetch()) {
+                    $resultado = new Propietario(
+                        $fila['codigo'],
+                        $fila['dni'],
+                        $fila['nombre'],
+                        $fila['telefono'],
+                        $fila['email']
+                    );
+                }
+            }
+        } catch (PDOException $e) {
+            echo $e->getMessage();
+        }
+        return $resultado;
+    }
     function obtenerPropietario($dni)
     {
         $resultado = null;
