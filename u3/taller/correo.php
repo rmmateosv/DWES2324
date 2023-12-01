@@ -14,7 +14,7 @@ function enviarCorreo(Modelo $bd,Reparacion $r,$detalle, Propietario $propietari
         $correo->Host = 'smtp.gmail.com';
         $correo->SMTPAuth = true;
         $correo->Username= 'rmmateosv@gmail.com';
-        $correo->Password = 'yletnnzisasozwst';
+        $correo->Password = '';
         $correo->SMTPSecure=PHPMailer::ENCRYPTION_SMTPS;
         $correo->Port=465;
 
@@ -26,6 +26,7 @@ function enviarCorreo(Modelo $bd,Reparacion $r,$detalle, Propietario $propietari
         $correo->Subject='Factura Reparación Nº '.$r->getId();
         $correo->Body="<h1>hola mundo</h1>";
         $correo->AltBody="<h1>hola mundo</h1>";
+        $correo->addAttachment('../icon/delete25.png');
         //Enviar correo
         if($correo->send()){
             $resultado=true;

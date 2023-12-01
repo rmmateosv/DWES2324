@@ -97,13 +97,15 @@ INSERT INTO piezaReparacion(reparacion,pieza,importe) VALUES (1,'F1',7),(1,'O1',
 (6,'M1',23),(6,'O1',15),(7,'R1',15),(7,'F3',70),(8,'O2',12),(8,'M1',15),(9,'O1',15),(10,'O1',15),(11,'M1',15),(11,'O2',35),(12,'F2',15),(12,'O1',15);    
 
 
+
+update propietario set email = 'rmmateosv@gmail.com';
 	
 delimiter //
 create function pagarReparacion(pRep int) returns float deterministic
 begin
 	declare vImporte float default 0;
-    declare tiempo float;
-    declare precioH float;
+    declare vtiempo float;
+    declare vprecioH float;
     
 	 select sum(importe*cantidad) into vImporte
 				from piezaReparacion
@@ -113,11 +115,11 @@ begin
 	end if;
 	-- Obtener el tiempo total de la repación y el precio por hora
     select tiempo, precioH 
-		into tiempo, precioH
+		into vtiempo, vprecioH
 		from reparacion
 		where id = pRep;
-	if(tiempo is not null and precioH is not null) then
-		set vImporte = vImporte + (tiempo * precioH);
+	if(vtiempo is not null and vprecioH is not null) then
+		set vImporte = vImporte + (vtiempo * vprecioH);
     end if;
     -- Actualizar el importe total en la reparación
     update reparacion set importeTotal = vImporte, pagado=true where id = pRep;
