@@ -7,7 +7,11 @@
     ?>
         <form action="" method="post">
             <input type="submit" name="crearR" class="btn btn-outline-dark" value="+" />
+<<<<<<< HEAD
             
+=======
+            <label>Reparaciones vehículo <?php echo $_SESSION['vehiculo']?></label>
+>>>>>>> 2af4e7fef26e199d4794f3b8fb606978d29fd678
             <table class="table table-striped">
                 <thead>
                     <tr>
