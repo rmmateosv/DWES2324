@@ -1,13 +1,21 @@
 <?php
-    if(isset($_POST['acceder'])){
-        if(empty($_POST['usuario']) or empty($_POST['ps'])){
-            //Mostrar error
-            $mensaje = 'Error, rellena us y ps';
-        }
-        else{
-            //Hacer login
+    require_once 'Modelo.php';
+    $bd = new Modelo();
+    if($bd->getConexion()==null){
+        $mensaje = 'Error, no hay conexión con la bd';
+    }
+    else{
+        if(isset($_POST['acceder'])){
+            if(empty($_POST['usuario']) or empty($_POST['ps'])){
+                //Mostrar error
+                $mensaje = 'Error, rellena us y ps';
+            }
+            else{
+                //Hacer login
+            }
         }
     }
+    
 ?>
 <!doctype html>
 <html>
