@@ -18,8 +18,59 @@ class Modelo{
             echo $e->getMessage();
         }
     }
+    function obtenerMensajesRecidos($empleado){
+        $resultado = array();
+        try{
+            $consulta = $this->conexion->prepare(
+                'SELECT * 
+                    from para as p 
+                    inner join mensaje as m using(idMen)
+                    inner join empleado as e on m.deEmpleado = e.idEmp 
+                    inner join departamento as d on m.paraDepartamento = d.idDep
+                    where p.paraEmpleado = ?');
+            $params = array($empleado->getIdEmp());
+            if($consulta->execute($params)){
+                while($fila=$consulta->fetch()){
+                    $m = new Mensaje($fila['idMen'],
+                    new Empleado($fila['idEmp'],$fila['dni'],$fila['nombreEmp'],
+                        $fila['fechaNac'],$fila['departamento'],$fila['cambiarPs']),
+                    new Departamento($fila['paraDepartamento'],
+                    
+                                                $fila['nombre']),
+                    $fila['asunto'],$fila['fechaEnvio'],$fila['mensaje']);
+                    $resultado[]=$m;
+                }
+            }
+        }catch(PDOException $e){
+            echo $e->getMessage();
+        }
+        return $resultado;
+    }
+    function obtenerMensajes($empleado)
+    {
+        $resultado = array();
+        try{
+            $consulta = $this->conexion->prepare(
+                'SELECT * from mensaje inner join departamento 
+                    on paraDepartamento = idDep 
+                where deEmpleado = ? order by fechaEnvio desc');
+            $params = array($empleado->getIdEmp());
+            if($consulta->execute($params)){
+                while($fila=$consulta->fetch()){
+                    $m = new Mensaje($fila['idMen'],
+                    $empleado,new Departamento($fila['paraDepartamento'],
+                                                $fila['nombre']),
+                    $fila['asunto'],$fila['fechaEnvio'],$fila['mensaje']);
+                    $resultado[]=$m;
+                }
+            }
+        }catch(PDOException $e){
+            echo $e->getMessage();
+        }
+        return $resultado;
+    }
     function enviarMensaje(Mensaje $m,$destinarios){
-        $resultado=false;
+        $resultado=0;
         try{
             //HAy que hacer inserts en 2 tablas => TRANSACCIÓN
             $this->conexion->beginTransaction();
@@ -29,12 +80,24 @@ class Modelo{
                             $m->getAsunto(),$m->getMensaje());
             if($consulta->execute($params)){
                 //REcuperar el id del mensaje generado
+                $idMensaje = $this->conexion->lastInsertId();
                 //Hacer un insert en para para cada destinatario
                 foreach($destinarios as $d){
                     $consulta = $this->conexion->prepare(
                         'INSERT into para values (?,?,false)');
-                    $params = array(,$d->getIdEmp())
+                    $params = array($idMensaje,$d->getIdEmp());
+                    if($consulta->execute($params)){
+                        if($consulta->rowCount()!=1){
+                            $this->conexion->rollBack();
+                        }
+                    }
+                    else{
+                        $this->conexion->rollBack();
+                    }
                 }
+                $this->conexion->commit();
+                $resultado = $idMensaje;
+                $m->setIdMen($idMensaje);
             }
         }catch(PDOException $e){
             $this->conexion->rollBack();

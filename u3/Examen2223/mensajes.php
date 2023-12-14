@@ -27,8 +27,13 @@ if(isset($_POST['Enviar'])){
 		$m = new Mensaje(0,$empleado->getIdEmp(),$_POST['para'],
 		$_POST['asunto'],date('Y-m-d'),$_POST['mensaje']);
 		$destinarios = $bd->obtenerEmpleadosDepartamento($_POST['para']);
-		if($bd->enviarMensaje($m,$destinarios)){
-			$mensaje = 'Mensaje enviado';
+		//El id del mensaje generado se puede recuperar de dos formas
+		//Bien que lo devuelva el método enviarMensaje
+		//o actualizándolo en el objeto $m
+		$id=$bd->enviarMensaje($m,$destinarios);
+		if($id!=0){
+			$mensaje = 'Mensaje nº '.$m->getIdMen().' enviado';
+			$mensaje .= '<br/>Mensaje nº '.$id.' enviado';
 		}
 		else{
 			$mensaje = 'Error, mensaje no enviado';
@@ -95,6 +100,23 @@ if(isset($_POST['Enviar'])){
             				<th align="left">Asunto</th>
             				<th align="left">Mensaje</th>
             			</tr>
+						<?php
+						$mensajesRecibidos = 
+							$bd->obtenerMensajesRecidos($empleado);
+						foreach($mensajesRecibidos as $m){
+							echo '<tr>';
+							echo '<td align="left">'.$m->getIdMen().'</td>';
+            				echo '<td align="left">'.
+							$m->getDeEmpleado()->getNombre().'</td> '; 
+							echo '<td align="left">'.
+							$m->getParaDepartamento()->getNombre().'</td> ';          				
+            				echo '<td align="left">'.
+							date('d/m/Y',strtotime($m->getFechaEnvio())).'</td>';
+            				echo '<td align="left">'.$m->getAsunto().'</td>';
+            				echo '<td align="left">'.$m->getMensaje().'</td>';
+							echo '</tr>';
+						}
+						?>
             		</table>
             		<h1 style="color:blue;">Bandeja de Salida</h1> 
             		<hr/>   
@@ -106,6 +128,20 @@ if(isset($_POST['Enviar'])){
             				<th align="left">Asunto</th>
             				<th align="left">Mensaje</th>
             			</tr>
+						<?php 
+						$mensajes = $bd->obtenerMensajes($empleado);
+						foreach($mensajes as $m){
+							echo '<tr>';
+							echo '<td align="left">'.$m->getIdMen().'</td>';
+            				echo '<td align="left">'.
+							$m->getParaDepartamento()->getNombre().'</td> ';           				
+            				echo '<td align="left">'.
+							date('d/m/Y',strtotime($m->getFechaEnvio())).'</td>';
+            				echo '<td align="left">'.$m->getAsunto().'</td>';
+            				echo '<td align="left">'.$m->getMensaje().'</td>';
+							echo '</tr>';
+						}
+						?>
             		</table>                              
       		</form>     
 		      
