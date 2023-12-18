@@ -10,6 +10,13 @@ class Pieza{
     {
         
     }
+    function rellenar($codigo,$clase,$descripcion,$precio, $stock){
+        $this->codigo=$codigo;
+        $this->clase=$clase;
+        $this->descripcion=$descripcion;
+        $this->precio=$precio;
+        $this->stock=$stock;
+    }
 
     /**
      * Get the value of codigo

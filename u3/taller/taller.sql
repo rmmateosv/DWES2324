@@ -71,17 +71,19 @@ create table reparacion(
     usuario int not null,
     foreign key (coche) references vehiculo(codigo) on update cascade on delete restrict,
     foreign key (usuario) references usuarios(id) on update cascade on delete restrict,
-    precioH float null
+    precioH float null default 0,
+	importeTotal float not null default 0
 )engine Innodb;
 
 
-INSERT INTO `reparacion` VALUES (1,1,'2020-08-25 15:01:00',2,1,1,null),
-(2,2,'2022-03-25 05:28:00',12,1,1,null),(3,3,'2021-03-10 22:14:00',2,1,1,null),
-(4,4,'2020-10-07 20:07:00',2,1,1,null),(5,5,'2021-10-10 07:13:00',2,1,1,null),
-(6,1,'2020-06-19 02:22:00',2,1,1,null),(7,2,'2020-05-28 22:09:00',2,1,1,null),
-(8,3,'2022-02-22 05:00:00',2,1,1,null),(9,1,'2021-06-29 22:30:00',2,1,1,null),
-(10,2,'2020-08-22 12:12:00',2,1,1,null),(11,3,'2022-06-01 10:30:00',12,0,1,null),
-(12,4,'2022-05-30 17:00:00',2,0,1,null),(13,5,'2022-05-14 09:00:00',2,0,1,null);
+INSERT INTO reparacion(id,coche,fechaHora,tiempo,pagado,usuario,precioH) 
+VALUES (1,1,'2020-08-25 15:01:00',2,1,1,0),
+(2,2,'2022-03-25 05:28:00',12,1,1,0),(3,3,'2021-03-10 22:14:00',2,1,1,0),
+(4,4,'2020-10-07 20:07:00',2,1,1,0),(5,5,'2021-10-10 07:13:00',2,1,1,0),
+(6,1,'2020-06-19 02:22:00',2,1,1,0),(7,2,'2020-05-28 22:09:00',2,1,1,0),
+(8,3,'2022-02-22 05:00:00',2,1,1,0),(9,1,'2021-06-29 22:30:00',2,1,1,0),
+(10,2,'2020-08-22 12:12:00',2,1,1,0),(11,3,'2022-06-01 10:30:00',12,0,1,0),
+(12,4,'2022-05-30 17:00:00',2,0,1,0),(13,5,'2022-05-14 09:00:00',2,0,1,0);
 create table piezaReparacion(
 	reparacion int,
     pieza varchar(3),    
@@ -95,25 +97,32 @@ INSERT INTO piezaReparacion(reparacion,pieza,importe) VALUES (1,'F1',7),(1,'O1',
 (6,'M1',23),(6,'O1',15),(7,'R1',15),(7,'F3',70),(8,'O2',12),(8,'M1',15),(9,'O1',15),(10,'O1',15),(11,'M1',15),(11,'O2',35),(12,'F2',15),(12,'O1',15);    
 
 
+
+update propietario set email = 'rmmateosv@gmail.com';
 	
 delimiter //
-create function totalReparacion(pRep int) returns float deterministic
+create function pagarReparacion(pRep int) returns float deterministic
 begin
 	declare vImporte float default 0;
-    declare tiempo float;
-    declare precioH float;
+    declare vtiempo float;
+    declare vprecioH float;
     
 	 select sum(importe*cantidad) into vImporte
 				from piezaReparacion
                 where reparacion = pRep;
+	if(vImporte is null) then
+		set vImporte = 0;
+	end if;
 	-- Obtener el tiempo total de la repación y el precio por hora
     select tiempo, precioH 
-		into tiempo, precioH
+		into vtiempo, vprecioH
 		from reparacion
 		where id = pRep;
-	if(tiempo is not null and precioH is not null) then
-		set vImporte = vImporte + (tiempo * precioH);
+	if(vtiempo is not null and vprecioH is not null) then
+		set vImporte = vImporte + (vtiempo * vprecioH);
     end if;
+    -- Actualizar el importe total en la reparación
+    update reparacion set importeTotal = vImporte, pagado=true where id = pRep;
 	return vImporte;
 end//
 
@@ -122,3 +131,15 @@ begin
 	select v.nombrepropietario, v.matricula, r.fechaHora, r.tiempo, totalReparacion(r.id)  from reparacion r inner join vehiculo v on r.coche = v.codigo where v.nombrePropietario like concat('%',pPropietario,'%');
 end//
 
+create procedure generarFactura(pIdRep int)
+begin
+	-- Devuelve en los parámetro de salida los datos de la mano de obra 
+	select 'Mano de Obra' as descripcion,  precioH as importe, tiempo as cantidad, precioH * tiempo as total
+        from reparacion
+        where id = pIdRep;
+	-- Detalle de piezas
+	select descripcion, importe, cantidad, importe*cantidad as total 
+		from piezareparacion inner join pieza on pieza = codigo
+		where reparacion = pIdRep;
+		
+end//

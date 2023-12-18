@@ -1,5 +1,6 @@
 <?php
 require_once '../Modelo.php';
+require_once '../correo.php';
 $bd = new Modelo();
 if ($bd->getConexion() == null) {
     $mensaje = array('e', 'Error, no hay conexión con la bd');
@@ -64,10 +65,89 @@ if ($bd->getConexion() == null) {
         $_SESSION['propietario'] = $_POST['propietario'];
         //Limpiamos el vehículo seleccionado de la sesión
         unset($_SESSION['vehiculo']);
+        unset($_SESSION['reparacion']);
     } elseif (isset($_POST["mostrarR"])) {
         $_SESSION['vehiculo'] = $_POST['mostrarR'];
-    } elseif (isset($_POST['borrar'])) {
-    } elseif (isset($_POST['crearR'])) {
+    } 
+    elseif (isset($_POST["datosR"])) {
+        $_SESSION['reparacion'] = $_POST['datosR'];
+        header('location:../reparacion/controllerReparacion.php');
+    } 
+    elseif(isset($_POST['updateR'])){
+        if($bd->modificarReparacion($_POST['updateR'],
+                 $_POST['horas'],(isset($_POST['pagado'])?true:false),$_POST['precioH'])){
+            $mensaje = array('i', 'Reparación modificada');
+        }        
+        else{
+            $mensaje = array('e', 'Error al modificar la reparación');
+        }
+    }
+    elseif (isset($_POST['borrar'])) {
+        //Borrar vehículo
+        $v = $bd->obtenerVehiculoId($_POST['borrar']);
+        //Si hay reparaciones no se puede borrar
+        $reparaciones = $bd->obtenerReparaciones($_POST['borrar']);
+        if(sizeof($reparaciones)>0){
+            $mensaje = array('e', 'Error, no se puede borrar porque hay reparaciones');
+        }
+        else{
+            if($bd->borrarVehiculo($_POST['borrar'])){
+                if($_SESSION['vehiculo']==$_POST['borrar']){
+                    unset($_SESSION['vehiculo']);
+                    unset($_SESSION['reparacion']);
+                }
+                
+                $mensaje = array('i', 'Vehículo borrado');
+            }        
+            else{
+                $mensaje = array('e', 'Error al borrar el vehículo');
+            }
+        }
+    } 
+    elseif (isset($_POST['update'])) {
+        //Modificar vehículo
+        $v = $bd->obtenerVehiculoId($_POST['update']);
+        //Comprobar que no hay un vehículo si se cambia la matrícula
+        if($_POST['matricula']!=$v->getMatricula()){
+            if($bd->obtenerVehiculo($_POST['matricula'])!=null){
+                $existe=true;
+            }
+        }  
+        if(!isset($existe)){ 
+            $v->setMatricula($_POST['matricula']);
+            $v->setColor($_POST['color']);
+            if($bd->modificarVehiculo($v)){
+                $mensaje = array('i', 'Vehículo modificado');
+            }        
+            else{
+                $mensaje = array('e', 'Error al modidficar el vehículo');
+            }
+        }
+        else{
+            $mensaje = array('e', 'Error ya existe la matrícula');
+        }
+        
+    }
+    elseif (isset($_POST['borrarR'])) {
+        //Borrar reparación
+        $r = $bd->obtenerReparacion($_POST['borrarR']);
+        //Si hay piezas en la reparación no se puede borrar
+        $piezas = $bd->obtenerPiezasReparacion($_POST['borrarR']);
+        if(sizeof($piezas)>0){
+            $mensaje = array('e', 'Error, no se puede borrar porque hay piezas en la reparación');
+        }
+        else{
+            if($bd->borrarReparacion($_POST['borrarR'])){
+                if($_POST['borrarR']==$_SESSION['reparacion'])
+                    unset($_SESSION['reparacion']);
+                $mensaje = array('i', 'REparaciónn borrada');
+            }        
+            else{
+                $mensaje = array('e', 'Error al borrar la reparación');
+            }
+        }
+    }
+    elseif (isset($_POST['crearR'])) {
         //Crear reparación para vehículo en $_SESSION
         $r = new Reparacion(
             0,
@@ -76,12 +156,38 @@ if ($bd->getConexion() == null) {
             0,
             false,
             $_SESSION['usuario']->getId(),
-            0
+            0, 0
         );
         if ($bd->crearReparacion($r)) {
             $mensaje = array('i', 'Reparación creada con código ' . $r->getId());
         } else {
             $mensaje = array('e', 'Se ha producido un error al crear la reparación');
+        }
+    }
+    elseif(isset($_POST['pagarR'])){
+        //FALTA CHEQUEO DE SI LA REPARACIÓN EXISTE Y NO ESTÁ PAGADA
+        if($bd->pagarR($_POST['pagarR'])){
+            $mensaje = array('i', 'Reparación pagada ');
+        }
+        else {
+            $mensaje = array('e', 'Se ha producido un error al pagar la reparación');
+        }
+    }
+    elseif(isset($_POST['enviarR'])){
+        $r = $bd->obtenerReparacion($_POST['enviarR']);
+        $coche = $bd->obtenerVehiculoId($r->getCoche());
+        $propietario = $bd->obtenerPropietarioId($coche->getPropietario());
+        if($propietario->getEmail()!=null){
+            if($r!=null and $r->getPagado()){
+                $detalle = $bd->obtenerDetalleReparacion($r->getId());
+                enviarCorreo($bd,$r,$detalle,$propietario);
+            }
+            else{
+                $mensaje = array('e', 'Reparción no existe o no está pagada');
+            }
+        }
+        else{
+            $mensaje = array('e', 'Error, el propietario no tiene acutualizado el email');
         }
     }
     session_write_close();
