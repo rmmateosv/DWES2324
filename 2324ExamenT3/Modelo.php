@@ -17,6 +17,64 @@ class Modelo
             echo $e->getMessage();
         }
     }
+    function obtenerInfoPedido($codigoPedido)
+    {
+        $resultado = array();
+        try {
+            $consulta =
+                $this->conexion->prepare('call datosPedido(?)');
+            $params = array($codigoPedido);
+            if ($consulta->execute($params)) {
+                if ($fila = $consulta->fetch()) {
+                    $resultado[] = $fila['numProd'];
+                    $resultado[] = $fila['total'];
+                }
+            }
+        } catch (PDOException $e) {
+            echo $e->getMessage();
+        }
+        return $resultado;
+    }
+    function crearPedido($tienda, $cesta)
+    {
+        $resultado = 0;
+        try {
+            //Iniciar transacción
+            $this->conexion->beginTransaction();
+            //Crear pedidio
+            $consulta = $this->conexion->prepare(
+                'INSERT into pedido values(default,curdate(),?)'
+            );
+            $params = array($tienda->getCodigo());
+            if ($consulta->execute($params)) {
+                //REcuperar el id del pedido generado
+                $idP = $this->conexion->lastInsertId();
+                //Inserts de productos en cesta
+                $linea = 0;
+                foreach ($cesta as $pc) {
+                    $consulta = $this->conexion->prepare(
+                        'INSERT into detalle values(?,?,?,?,?)'
+                    );
+                    $params = array(
+                        ++$linea, $idP, $pc->getProducto()->getCodigo(),
+                        $pc->getCantidad(), $pc->getProducto()->getPrecio()
+                    );
+                    if (!$consulta->execute($params)) {
+                        $this->conexion->rollBack();
+                        return 0;
+                    }
+                }
+                $this->conexion->commit();
+                $resultado = $idP;
+            } else {
+                $this->conexion->rollBack();
+            }
+        } catch (PDOException $e) {
+            $this->conexion->rollBack();
+            echo $e->getMessage();
+        }
+        return $resultado;
+    }
     function obtenerProducto($codigo)
     {
         $resultado = null;

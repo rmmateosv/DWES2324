@@ -24,13 +24,29 @@ if ($bd->getConexion() == null) {
             $producto = $bd->obtenerProducto($_POST['producto']);
             if ($producto != null) {
                 //Añadir a cesta
-                $proCesta = new ProductoEnCesta($producto,$_POST['cantidad']);
-                if(isset)
-                []=$proCesta;
-            }
-            else{
+                $proCesta = new ProductoEnCesta($producto, $_POST['cantidad']);
+                if (!isset($_SESSION['cesta'])) {
+                    $_SESSION['cesta'] = array();
+                }
+                $_SESSION['cesta'][] = $proCesta;
+            } else {
                 $mensaje = 'Error, producto no existe';
             }
+        }
+    } elseif (isset($_POST['crearPedido'])) {
+        if (isset($_SESSION['cesta']) and !empty($_SESSION['cesta'])) {
+            $codigoPedido = $bd->crearPedido($_SESSION['tienda'], $_SESSION['cesta']);
+            if ($codigoPedido > 0) {
+                $mensaje = 'Pedido Creado';
+                unset($_SESSION['cesta']);
+                $datos = $bd->obtenerInfoPedido($codigoPedido);
+                $mensaje = 'Pedidio nº ' . $codigoPedido . ' generado. El nº de productos es' .
+                    $datos[0] . ' y el importe total es ' . $datos[1];
+            } else {
+                $mensaje = 'Error al crear el pedido';
+            }
+        } else {
+            $mensaje = 'Error, cesta vacía';
         }
     }
 }
@@ -109,6 +125,17 @@ if ($bd->getConexion() == null) {
                         <td><b>Cantidad</b></td>
                         <td><b>Precio</b></td>
                     </tr>
+                    <?php
+                    if (isset($_SESSION['cesta'])) {
+                        foreach ($_SESSION['cesta'] as $pc) {
+                            echo '<tr>';
+                            echo '<td>', $pc->getProducto()->getNombre(), '</td>';
+                            echo '<td>', $pc->getCantidad(), '</td>';
+                            echo '<td>', $pc->getProducto()->getPrecio(), '</td>';
+                            echo '</tr>';
+                        }
+                    }
+                    ?>
 
                 </table>
                 <button type="submit" name="crearPedido">Crear Pedido</button>
