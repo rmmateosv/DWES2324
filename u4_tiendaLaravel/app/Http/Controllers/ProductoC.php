@@ -8,7 +8,7 @@ class ProductoC extends Controller
 {
     //Método que maneja la ruta productos
     function productos(){
-        return 'Página para ver todos los productos';
+        return view('productos/productos');
     }
     //Método que maneja la ruta crearProducto
     function crear(){

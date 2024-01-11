@@ -37,13 +37,6 @@ Route::controller(ProductoC::class)->group(function(){
 });
 
 
-
-
-
-
-
-
-
 //Definir ruta con dos parámetros
 Route::get('productos/modificar/{idP}/{unTexto}',function($idP,$texto){
     echo '<h1>'.$texto.'</h1>';
