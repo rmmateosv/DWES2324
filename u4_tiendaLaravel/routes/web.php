@@ -25,6 +25,7 @@ Route::controller(ProductoC::class)->group(function(){
     //Ruta básica
     //Definir ruta para crear un producto
     Route::get('productos/crear','crear')->name('crearProducto');
+    Route::post('productos/insertar','insertar')->name('insertarProducto');
     //Definir una ruta con un pármetro
     //Ruta para ver un producto concreto, pasando el id
     Route::get('productos/{idP}','ver')->name('verP');

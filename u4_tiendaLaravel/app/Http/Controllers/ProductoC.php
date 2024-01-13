@@ -12,7 +12,10 @@ class ProductoC extends Controller
     }
     //Método que maneja la ruta crearProducto
     function crear(){
-        return 'Página para crear un producto';
+        return view('productos/crear');
+    }
+    function insertar(){
+        return 'Insertar procducto';
     }
     //Método que maneja la ruta verP
     function ver($idP){
@@ -26,5 +29,6 @@ class ProductoC extends Controller
     function borrar($idP){
         return 'Página para borrar el producto '.$idP;
     }
+    
 
 }
