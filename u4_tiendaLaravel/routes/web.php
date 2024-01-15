@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ClienteC;
 use App\Http\Controllers\ProductoC;
 use Illuminate\Support\Facades\Route;
 
@@ -36,6 +37,21 @@ Route::controller(ProductoC::class)->group(function(){
     //Ruta para modificar un producto concreto, pasando el id
     Route::get('productos/modificar/{idP}','modificar')->name('modificarP');
 });
+
+Route::controller(ClienteC::class)->group(function(){
+    //Ruta para ver todos los clientes
+    Route::get('clientes','clientes')->name('clientes');
+    //Ruta para crear un cliente
+    Route::get('clientes/crear','crear')->name('crearCliente');
+    Route::post('clientes/insertar','insertar')->name('insertarCliente');
+    //Ruta para ver un cliente concreto, pasando el id
+    Route::get('clientes/{idC}','ver')->name('verC');
+    //Ruta para borrar un vliente concreto, pasando el id
+    Route::get('clientes/borrar/{idC}','borrar')->name('borrarC');
+    //Ruta para modificar un cliente concreto, pasando el id
+    Route::get('clientes/modificar/{idC}','modificar')->name('modificarC');
+});
+
 
 
 //Definir ruta con dos parámetros
