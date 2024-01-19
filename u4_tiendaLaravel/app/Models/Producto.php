@@ -8,4 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class Producto extends Model
 {
     use HasFactory;
+
+    function detalle_pedidos(){
+        return $this->hasMany(Pedido_Producto::class,'producto','id')->get();
+    }
 }

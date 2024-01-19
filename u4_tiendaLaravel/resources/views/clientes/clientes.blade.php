@@ -2,12 +2,6 @@
 
 @section('titulo','CLIENTES')
 
-@section('mensaje')
-<div class="container">
-    <h5 class="text-danger">Espacio para mensaje</h3> 
-</div>
-    
-@endsection
 
 @section('contenido')
     

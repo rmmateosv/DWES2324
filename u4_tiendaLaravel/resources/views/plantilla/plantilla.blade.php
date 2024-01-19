@@ -36,7 +36,10 @@
         </header>
         <section>
             <div class="container">
-                @yield('mensaje')
+                <!-- Comprobar si hay mensaje en la variable de sessión -->
+                @if (session('mensaje'))
+                <h5 class="text-danger">{{session('mensaje')}}</h5> 
+                @endif
             </div>
         </section>
         <section>

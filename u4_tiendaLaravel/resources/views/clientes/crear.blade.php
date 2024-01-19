@@ -2,9 +2,6 @@
 
 @section('titulo','CREAR CLIENTE')
 
-@section('mensaje')
-    <h5 class="text-danger">Espacio para mensaje</h3> 
-@endsection
 
 @section('contenido')
     <form action="{{route('insertarCliente')}}" method="post" enctype="multipart/form-data">
