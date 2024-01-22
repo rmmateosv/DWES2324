@@ -14,7 +14,10 @@
     <body>
         <header>
           <div class="container">
-            <h1 class="display-6">@yield('titulo')</h1>
+            <div style="display: flex; ">
+              <img src="{{asset('img/logo.png')}}" alt="logo">
+              <h1 class="display-6">@yield('titulo')</h1>
+            </div>
             <nav class="navbar navbar-expand-lg navbar-light bg-light">
                 <div class="container-fluid">
                   <div class="collapse navbar-collapse" id="navbarScroll">

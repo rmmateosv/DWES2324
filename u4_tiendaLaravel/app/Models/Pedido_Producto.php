@@ -9,6 +9,9 @@ class Pedido_Producto extends Model
 {
     use HasFactory;
     
+    //Indicar el nombre de la tablas cuando 
+    //cuando no seguimos la convención de nombres
+    protected $table = 'pedido_productos';
 
     function pedido(){
         //Si seguimos la convención de nombres

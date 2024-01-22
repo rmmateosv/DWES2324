@@ -30,7 +30,11 @@ class ProductoC extends Controller
        $p->descripcion = $r->desc;
        $p->precio = $r->precio;
        $p->stock= $r->stock;
-       $p->img='nombreIMG';
+        //Subir imagen del producto al servidor
+        //y rellenar el producto con la ruta de la imagen
+        //El fichero se almacena en storage/app/public/img/productos
+        $ruta=$r->file('imagen')->store('img/productos','public');
+       $p->img=$ruta;
        //Hacemos el insert en la tabla
        if($p->save()){
             //Volvemos a la página anterior(ruta productos) y mostramos
@@ -55,7 +59,18 @@ class ProductoC extends Controller
     }
     //Método que maneja la ruta borrarP
     function borrar($idP){
-        return 'Página para borrar el producto '.$idP;
+        //Obtener el producto a borrar
+        $p = Producto::find($idP);
+
+        //Si tiene pedidos no podemos borrar el productos
+        if(sizeof($p->detalle_pedidos())>0){
+            return back()->with('mensaje', 'Error, el producto se ha pedido');
+        }
+        else{
+            if($p->delete()){
+                return back()->with('mensaje', 'Producto borrado'); 
+            }
+        }
     }
     
 

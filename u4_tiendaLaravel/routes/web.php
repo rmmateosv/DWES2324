@@ -32,7 +32,7 @@ Route::controller(ProductoC::class)->group(function(){
     Route::get('productos/{idP}','ver')->name('verP');
     //Definir una ruta con un párametro
     //Ruta para borrar un producto concreto, pasando el id
-    Route::get('productos/borrar/{idP}','borrar')->name('borrarP');
+    Route::delete('productos/borrar/{idP}','borrar')->name('borrarP');
     //Definir una ruta con un párametro
     //Ruta para modificar un producto concreto, pasando el id
     Route::get('productos/modificar/{idP}','modificar')->name('modificarP');

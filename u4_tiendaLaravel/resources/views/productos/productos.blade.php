@@ -15,6 +15,7 @@
                 <th scope="col">Descripción</th>
                 <th scope="col">Precio</th>
                 <th scope="col">Stock</th>
+                <th scope="col">Foto</th>
                 <th scope="col">Acciones</th>
             </tr>
         </thead>
@@ -25,8 +26,18 @@
                     <td>{{$p->nombre}}</td>
                     <td>{{$p->descripcion}}</td>
                     <td>{{$p->precio}}</td>
-                    <td>{{$p->stock}}</td>
-                    
+                    <td>{{$p->stock}}</td>                    
+                    <td><img src="{{asset('storage/'.$p->img)}}" width="50px"/></td>    
+                    <td>
+                        <a class="btn btn-outline-success" href="{{route('modificarP',$p->id)}}">
+                            Modificar</a>
+                        <form action="{{route('borrarP',$p->id)}}" method="POST">
+                            @method('DELETE')
+                            @csrf
+                            <button type="submit" class="btn btn-outline-danger">Borrar</button>
+                        </form>
+
+                    </td>
                 </tr>
             @endforeach
         </tbody>
