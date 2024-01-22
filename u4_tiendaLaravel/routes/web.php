@@ -36,6 +36,7 @@ Route::controller(ProductoC::class)->group(function(){
     //Definir una ruta con un párametro
     //Ruta para modificar un producto concreto, pasando el id
     Route::get('productos/modificar/{idP}','modificar')->name('modificarP');
+    Route::put('productos/modificar/{idP}','actualizar')->name('actualizarP');
 });
 
 Route::controller(ClienteC::class)->group(function(){

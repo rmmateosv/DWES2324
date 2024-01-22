@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Producto;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class ProductoC extends Controller
 {
@@ -36,6 +37,8 @@ class ProductoC extends Controller
         $ruta=$r->file('imagen')->store('img/productos','public');
        $p->img=$ruta;
        //Hacemos el insert en la tabla
+       //$p->save:Sabe que hay que hacer un insert porque $p
+       //se ha creado con un new. 
        if($p->save()){
             //Volvemos a la página anterior(ruta productos) y mostramos
             //mensaje de éxito
@@ -55,7 +58,41 @@ class ProductoC extends Controller
     }
     //Método que maneja la ruta modificarP
     function modificar($idP){
-        return 'Página para modificar el producto '.$idP;
+        //Recuperar los datos del producto
+        $p = Producto::find($idP);
+        return view('productos/modificar',compact('p'));
+    }
+    //Método que maneja la ruta modificarP
+    function actualizar(Request $r,$idP){
+        //Recuperar los datos del producto antes de modificar
+        //es el producto tal cual está en la BD
+        $p = Producto::find($idP);
+        //Modificamos los campos que se hayan podido cambiar en el formulario
+        //$r tiene los datos modificados y $p los antiguos
+        $p->nombre = $r->nombre;
+        $p->descripcion = $r->desc;
+        $p->precio = $r->precio;
+        $p->stock = $r->stock;
+
+        //Subir nueva imagen solamente si se ha modficado
+        if(!empty($r->imagen)){
+            //Borrar la imagen antigua
+            Storage::delete('public/'.$p->img);
+            //Subir la imagen nueva
+            $ruta = $r->file('imagen')->store('img/productos','public');
+            $p->img=$ruta;
+        }
+
+        //Modificar el producto en la BD
+        //$p->save:Sabe que hay que hacer un update porque $p
+        //se ha creado con un find. 
+        if($p->save()){
+            return back()->with('mensaje','Producto modificado correctamente');
+        }
+        else{
+            return back()->with('mensaje','Error, no se ha modificado el producto');
+        }
+       
     }
     //Método que maneja la ruta borrarP
     function borrar($idP){
@@ -68,6 +105,8 @@ class ProductoC extends Controller
         }
         else{
             if($p->delete()){
+                //Borrar la imagen
+                Storage::delete('public/'.$p->img);
                 return back()->with('mensaje', 'Producto borrado'); 
             }
         }
