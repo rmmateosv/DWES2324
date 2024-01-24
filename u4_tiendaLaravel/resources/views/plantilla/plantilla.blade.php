@@ -43,6 +43,17 @@
                 @if (session('mensaje'))
                 <h5 class="text-danger">{{session('mensaje')}}</h5> 
                 @endif
+                <!-- Mostrar todas las validaciones juntas -->
+                {{-- 
+                @if ($errors->any())
+                  <ul>
+                    @foreach ($errors->all() as $e)
+                        <li class="text-danger">{{$e}}</li>
+                    @endforeach
+                  </ul>                    
+                @endif
+                 --}}
+                
             </div>
         </section>
         <section>

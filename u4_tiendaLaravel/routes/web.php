@@ -48,9 +48,10 @@ Route::controller(ClienteC::class)->group(function(){
     //Ruta para ver un cliente concreto, pasando el id
     Route::get('clientes/{idC}','ver')->name('verC');
     //Ruta para borrar un vliente concreto, pasando el id
-    Route::get('clientes/borrar/{idC}','borrar')->name('borrarC');
+    Route::delete('clientes/borrar/{idC}','borrar')->name('borrarC');
     //Ruta para modificar un cliente concreto, pasando el id
     Route::get('clientes/modificar/{idC}','modificar')->name('modificarC');
+    Route::put('clientes/modificar/{idC}','actualizar')->name('actualizarC');
 });
 
 

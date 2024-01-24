@@ -23,6 +23,23 @@ class ProductoC extends Controller
     //Para acceder a los campos del formulario hay que
     //definir un parámetro de la clase Request
     function insertar(Request $r){
+        //HACER LAS VALIDACIONES
+        //Todos los campos deben estar rellenos
+        //El nombre del producto no se puede repetir ya que es Unique
+        //Precio y stock no pueden ser negativos
+
+        //Validar: Admite un array con todas las validaciones
+        //Hay que indicar el name del campo del campo a validar
+        //y las validaciones sobre él. Si hay más de una se separan por |
+        $r->validate([
+            "nombre"=>"required|unique:App\Models\Producto,nombre", //Dos validaciones: requerido y único en la tabla productos
+            "desc"=>"required",
+            "precio"=>"required|gte:0", //Requerido y >=0
+            "stock"=>"required|gte:0", //Requerido y >=0
+            "imagen"=>"required",
+        ]);
+
+
        //Crear un objeto del modelo Producto
        $p = new Producto();
        //Rellenar los datos del producto
@@ -64,9 +81,25 @@ class ProductoC extends Controller
     }
     //Método que maneja la ruta modificarP
     function actualizar(Request $r,$idP){
+        //Validar: Admite un array con todas las validaciones
+        //Hay que indicar el name del campo del campo a validar
+        //y las validaciones sobre él. Si hay más de una se separan por |
+        $r->validate([
+            "nombre"=>"required", 
+            "desc"=>"required",
+            "precio"=>"required|gte:0", //Requerido y >=0
+            "stock"=>"required|gte:0" //Requerido y >=0
+        ]);
+
         //Recuperar los datos del producto antes de modificar
         //es el producto tal cual está en la BD
         $p = Producto::find($idP);
+        //¡¡ VALIDAR SI SE HA CAMBIADO EL NOMBRE DEL PRODUCTO
+        //QUE NO ESTÉ REPETIDO!!
+        if($p->nombre != $r->nombre){
+            $r->validate(['nombre'=>'unique:App\Models\Producto,nombre']);
+        }
+
         //Modificamos los campos que se hayan podido cambiar en el formulario
         //$r tiene los datos modificados y $p los antiguos
         $p->nombre = $r->nombre;
@@ -87,7 +120,7 @@ class ProductoC extends Controller
         //$p->save:Sabe que hay que hacer un update porque $p
         //se ha creado con un find. 
         if($p->save()){
-            return back()->with('mensaje','Producto modificado correctamente');
+            return redirect()->route('productos')->with('mensaje','Producto modificado correctamente');
         }
         else{
             return back()->with('mensaje','Error, no se ha modificado el producto');
