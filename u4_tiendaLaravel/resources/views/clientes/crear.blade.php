@@ -7,7 +7,7 @@
     <form action="{{route('insertarCliente')}}" method="post" enctype="multipart/form-data">
         @csrf
         <div class="mb-3">
-            <label for="nombre" class="form-label">Email</label>
+            <label for="email" class="form-label">Email</label>
             <input type="email" class="form-control" name="email" id="email" 
             value="{{old('email')}}" placeholder="email@email.com">
             @error('email')            
