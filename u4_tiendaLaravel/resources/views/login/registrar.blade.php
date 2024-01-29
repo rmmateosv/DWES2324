@@ -48,16 +48,16 @@
                         @enderror
                     </div>
                     <div class="mb-3">
-                        <label for="ps" class="form-label">Contraseña</label>
-                        <input type="password1" class="form-control" name="ps" id="ps"/>
-                        @error('ps')            
+                        <label for="ps1" class="form-label">Contraseña</label>
+                        <input type="password" class="form-control" name="ps1" id="ps1"/>
+                        @error('ps1')            
                         <span class="text-danger">{{$message}}</span>
                         @enderror
                     </div>
                     <div class="mb-3">
-                        <label for="ps" class="form-label">Repite Contraseña</label>
-                        <input type="password2" class="form-control" name="ps" id="ps"/>
-                        @error('ps')            
+                        <label for="ps2" class="form-label">Repite Contraseña</label>
+                        <input type="password" class="form-control" name="ps2" id="ps2"/>
+                        @error('ps2')            
                         <span class="text-danger">{{$message}}</span>
                         @enderror
                     </div>
