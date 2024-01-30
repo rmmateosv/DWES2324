@@ -13,7 +13,7 @@
             value="{{$c->id}}" disabled="disabled">
             <label for="nombre" class="form-label">Email</label>
             <input type="email" class="form-control" name="email" id="email" 
-            value="{{$c->email}}" placeholder="email@email.com">
+            value="{{$c->usuario->email}}" placeholder="email@email.com">
             @error('email')            
             <span class="text-danger">{{$message}}</span>
             @enderror
@@ -21,7 +21,7 @@
         <div class="mb-3">
             <label for="nombre" class="form-label">Nombre</label>
             <input type="text" class="form-control" name="nombre" 
-            id="nombre" placeholder="Nombre" value="{{$c->nombre}}">
+            id="nombre" placeholder="Nombre" value="{{$c->usuario->name}}">
             @error('nombre')            
             <span class="text-danger">{{$message}}</span>
             @enderror

@@ -17,4 +17,7 @@ class Cliente extends Model
         //Si seguimos la convención de nombres
         return $this->HasMany(Pedido::class)->get();
     }
+    function usuario(){
+        return $this->belongsTo(User::class,'user_id','id');
+    }
 }

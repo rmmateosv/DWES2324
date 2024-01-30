@@ -6,7 +6,9 @@ use App\Models\Cliente;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use PDOException;
 
 class LoginC extends Controller
 {
@@ -39,29 +41,44 @@ class LoginC extends Controller
             'dir'=>'required'
 
         ]);
-        //Crear usuario en tabla users
-        $u = new User();
-        $u->name=$request->nombre;
-        $u->email=$request->email;
-        $u->password=Hash::make($request->ps1);
-        $u->tipo = 'C';
-        if($u->save()){
-            //Crear el cliente 
-            $c = new Cliente();
-            $c->telefono=$request->telf;
-            $c->direccion=$request->dir;
-            $c->user_id = $u->id;
-            if($c->save()){
-                //Logueamos el usario directamente
-                Auth::login($u);
+        $error=false;
+        try{
+            DB::transaction(function() use ($request){
+                //Crear usuario en tabla users
+                $u = new User();
+                $u->name=$request->nombre;
+                $u->email=$request->email;
+                $u->password=Hash::make($request->ps1);
+                $u->tipo = 'C';
+                if($u->save()){
+                    //Crear el cliente 
+                    $c = new Cliente();
+                    $c->telefono=$request->telf;
+                    $c->direccion=$request->dir;
+                    $c->user_id = $u->id;
+                    if($c->save()){
+                        //Logueamos el usario directamente
+                        Auth::login($u);
+                        
+                    }
+                    else{
+                        return back()->with('mensaje','Error al crear el cliente');
+                    }
+    
+                }else{
+                    return back()->with('mensaje','Error al crear el usuario');
+                }
+            });
+        }
+        catch(PDOException $e){
+            $error=true;
+            return back()->with('mensaje',$e->getMessage());
+        } 
+        finally{
+            if(!$error){
                 return redirect()->route('productos');
             }
-            else{
-                return back()->with('mensaje','Error al crear el cliente');
-            }
-
-        }else{
-            return back()->with('mensaje','Error al crear el usuario');
+            
         }
     }
 }

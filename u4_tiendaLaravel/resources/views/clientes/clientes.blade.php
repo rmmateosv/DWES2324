@@ -5,7 +5,7 @@
 
 @section('contenido')
     
-    <a class="btn btn-outline-success" href="{{route('crearCliente')}}">Nuevo</a>
+    {{--  <a class="btn btn-outline-success" href="{{route('crearCliente')}}">Nuevo</a> --}}
 
     <table class="table table-striped">
         <thead class="table-info">
@@ -22,10 +22,10 @@
             @foreach ($clientes as $c)
                 <tr>
                     <td>{{$c->id}}</td>
-                    <td>{{$c->nombre}}</td>
+                    <td>{{$c->usuario->name}}</td>
                     <td>{{$c->direccion}}</td>
                     <td>{{$c->telefono}}</td>
-                    <td>{{$c->email}}</td>                    
+                    <td>{{$c->usuario->email}}</td>                    
                     <td>
                         <a class="btn btn-outline-success" href="{{route('modificarC',$c->id)}}">
                             Modificar</a>
