@@ -8,6 +8,10 @@ use Illuminate\Support\Facades\Storage;
 
 class ProductoC extends Controller
 {
+    function __construct()
+    {
+        $this->middleware('auth');
+    }
     //Método que maneja la ruta productos
     function productos(){
         //Recuperar los productos para mostrarlos en la

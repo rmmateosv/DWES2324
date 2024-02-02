@@ -23,9 +23,25 @@ class LoginC extends Controller
     }
     function salir(){
         //Cerrar sesión y redirigir a login
+        Auth::logout();
+        return redirect()->route('login');
     }
-    function loguear(){
+    function loguear(Request $r){
         //Abrir sesión si us y ps son correctos
+        $r->validate([
+            'email'=>'required|email:rfc,dns',
+            'ps'=>'required'
+        ]);
+        $credenciales = ['email'=>$r->email,
+            'password'=>$r->ps];
+        if(Auth::attempt($credenciales)){
+            $r->session()->regenerate();
+            return redirect()->route('productos');
+        }
+        else{
+            return redirect()->back()->with('mensaje','Datos incorrectos');
+        }
+
     }
     function registrar(Request $request){
         //Crear un usuario en users y clientes

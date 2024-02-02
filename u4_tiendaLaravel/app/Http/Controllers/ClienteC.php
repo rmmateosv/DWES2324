@@ -9,6 +9,11 @@ use Illuminate\Support\Facades\DB;
 
 class ClienteC extends Controller
 {
+    function __construct()
+    {
+        $this->middleware('auth');
+    }
+    
     //Método que maneja la ruta clientes
     function clientes(){
         $clientes = Cliente::all();
@@ -92,8 +97,7 @@ class ClienteC extends Controller
                  }
                  else{
                      return back()->with('mensaje','Error, no se ha modificado el cliente');
-                 }
-            });
+                 }});
         } catch (Exception $e) {
             $error=true;
             return back()->with('mensaje','Error, no se ha modificado el cliente');

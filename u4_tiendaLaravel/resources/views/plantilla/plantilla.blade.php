@@ -17,6 +17,9 @@
             <div style="display: flex; ">
               <img src="{{asset('img/logo.png')}}" alt="logo">
               <h1 class="display-6">@yield('titulo')</h1>
+              <h3 class="justify-self-end">{{Auth::user()->name}}</h3>
+              <a class="btn btn-outline-success" 
+              href="{{route('salir')}}">Salir</a>
             </div>
             <nav class="navbar navbar-expand-lg navbar-light bg-light">
                 <div class="container-fluid">
