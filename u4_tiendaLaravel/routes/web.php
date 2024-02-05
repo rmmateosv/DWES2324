@@ -1,7 +1,9 @@
 <?php
 
+use App\Http\Controllers\CarritoC;
 use App\Http\Controllers\ClienteC;
 use App\Http\Controllers\LoginC;
+use App\Http\Controllers\PedidosC;
 use App\Http\Controllers\ProductoC;
 use Illuminate\Support\Facades\Route;
 
@@ -74,4 +76,13 @@ Route::get('productos/modificar/{idP}/{unTexto}',function($idP,$texto){
 Route::get('productos/opt/{idP}/{unTexto?}',function($idP,$texto=null){
     echo '<h1>'.$texto!=null?$texto:"".'</h1>';
     echo 'Página para ver como se define un parámetro opcional '.$idP;
+});
+
+Route::controller(PedidosC::class)->group(function(){    
+    Route::get('pedidos','pedidos')->name('pedidos');  //Ver pedidos Admin
+});
+
+Route::controller(CarritoC::class)->group(function(){    
+    Route::post('carrito/{idP}','insertarCarrito')->name('aCarrito'); //Carga form login
+    
 });

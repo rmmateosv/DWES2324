@@ -14,7 +14,7 @@
     <body>
         <header>
           <div class="container">
-            <div style="display: flex; ">
+            <div style="display: flex; ">  
               <img src="{{asset('img/logo.png')}}" alt="logo">
               <h1 class="display-6">@yield('titulo')</h1>
               <h3 class="justify-self-end">{{Auth::user()->name}}</h3>
@@ -27,13 +27,16 @@
                     <ul class="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 100px;">
                       <li class="nav-item">
                         <a class="nav-link active" aria-current="page" href="{{route('productos')}}">Productos</a>
-                     </li>
-                      <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="{{route('clientes')}}">Clientes</a>
-                        </li>
-                      <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="{{route('productos')}}">Pedidos</a>
                       </li>
+                      @if (Auth::user()->tipo=='A')                     
+                        <li class="nav-item">
+                          <a class="nav-link active" aria-current="page" href="{{route('clientes')}}">Clientes</a>
+                          </li>                  
+                      @endif
+                      <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="{{route('pedidos')}}">Pedidos</a>
+                      </li> 
+                      
                     </ul>
                   </div>
                 </div>
