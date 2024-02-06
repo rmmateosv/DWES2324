@@ -79,10 +79,11 @@ Route::get('productos/opt/{idP}/{unTexto?}',function($idP,$texto=null){
 });
 
 Route::controller(PedidosC::class)->group(function(){    
-    Route::get('pedidos','pedidos')->name('pedidos');  //Ver pedidos Admin
+    Route::get('pedidos','pedidos')->name('pedidos');  
 });
 
 Route::controller(CarritoC::class)->group(function(){    
-    Route::post('carrito/{idP}','insertarCarrito')->name('aCarrito'); //Carga form login
-    
+    Route::post('carrito','insertarCarrito')->name('aCarrito'); 
+    Route::get('carrito/verCarrito','verCarrito')->name('verCarrito'); 
+    Route::post('carrito/modificarCarrito','modificarCarrito')->name('modificarCarrito'); 
 });

@@ -20,6 +20,13 @@
               <h3 class="justify-self-end">{{Auth::user()->name}}</h3>
               <a class="btn btn-outline-success" 
               href="{{route('salir')}}">Salir</a>
+              {{-- Mostrar nº de productos en carrito --}}
+         
+              @if (session('carrito')!=null)
+                  <h3>
+                    <a href="{{route('verCarrito')}}">Carrito:{{sizeof(session('carrito'))}}</a>
+                  </h3>
+              @endif
             </div>
             <nav class="navbar navbar-expand-lg navbar-light bg-light">
                 <div class="container-fluid">
