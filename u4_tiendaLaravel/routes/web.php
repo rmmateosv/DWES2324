@@ -80,6 +80,7 @@ Route::get('productos/opt/{idP}/{unTexto?}',function($idP,$texto=null){
 
 Route::controller(PedidosC::class)->group(function(){    
     Route::get('pedidos','pedidos')->name('pedidos');  
+    Route::post('pedidos/crear','crearPedido')->name('crearPedido');  
 });
 
 Route::controller(CarritoC::class)->group(function(){    

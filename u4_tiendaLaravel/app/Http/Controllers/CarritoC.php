@@ -52,7 +52,7 @@ class CarritoC extends Controller
             //Modificar la cantidad del producto en el carrito            
             foreach($carrito as $clave=>$pc){
                 if($pc['producto']->id == $r->modificarPC){
-                    $carrito[$clave]['cantidad']=$pc['cantidad']+$r->cantidad;
+                    $carrito[$clave]['cantidad']=$r->cantidad;
                     session(['carrito'=>$carrito]);
                     return back()->with('mensaje','Producto modificado');
                 }

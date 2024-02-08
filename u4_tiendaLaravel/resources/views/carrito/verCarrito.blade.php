@@ -40,6 +40,11 @@
             @endforeach
         </tbody>
     </table>
+    <form action="{{route('crearPedido')}}" method="post">
+        @csrf
+        <button type="submit" class="btn btn-outline-success" 
+            value="">Crear Pedido</button>
+    </form>
 @endsection
 
     
