@@ -21,11 +21,11 @@
         @foreach ($prestamos as $p)
         <tr>
             <th>{{$p->id}}</th>
-            <th>{{date('d/m/Y',$p->fecha)}}</th>
-            <th>{{$p->libro_id}}</th>
+            <th>{{date('d/m/Y',strtotime($p->fecha))}}</th>
+            <th>{{$p->libro->titulo}}</th>
             <th>{{$p->nombreCliente}}</th>
             <th>{{$p->fechaDevolucion}}</th>
-            <th>Acciones</th>
+            <th><a href="{{route('rutaModificar',$p->id)}}">Modificar</a></th>
         </tr>
         @endforeach
     </table>

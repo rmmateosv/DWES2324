@@ -29,5 +29,6 @@ Route::controller(PrestamoC::class)->group(
         Route::get('verPrestamos','ver')->name('rutaVer');
         Route::get('crearPrestamos','crear')->name('rutaCrear');
         Route::get('modificarPrestamo/{id}','modificar')->name('rutaModificar');
+        Route::post('insertarPrestamos','insertar')->name('rutaInsertar');
     }
 );
