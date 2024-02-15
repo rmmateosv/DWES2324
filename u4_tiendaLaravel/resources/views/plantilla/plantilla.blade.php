@@ -14,19 +14,24 @@
     <body>
         <header>
           <div class="container">
-            <div style="display: flex; ">  
-              <img src="{{asset('img/logo.png')}}" alt="logo">
-              <h1 class="display-6">@yield('titulo')</h1>
-              <h3 class="justify-self-end">{{Auth::user()->name}}</h3>
-              <a class="btn btn-outline-success" 
+            <div style="display: flex; justify-content:space-beetween;">  
+              <div>
+                <img src="{{asset('img/logo.png')}}" alt="logo">
+                <h1 class="display-6">@yield('titulo')</h1>
+              </div>
+              <div style="display: flex; justify-content:flex-end; align-items:center; flex-grow:1;">
+                <h3 style="margin:10px;" class="justify-self-end">{{Auth::user()->name}}</h3>
+                {{-- Mostrar nº de productos en carrito --}}
+                @if (session('carrito')!=null)
+                  <h5 style="margin:10px;display: flex; flex-direction:column; align-items:center">
+                    <a style="text-decoration:none;color:red;" href="{{route('verCarrito')}}">{{sizeof(session('carrito'))}}</a>       
+                    <a href="{{route('verCarrito')}}"><img style="width: 40px;" src="{{asset('img/carrito.png')}}" alt=""></a>           
+                  </h5>
+                @endif
+                <a  style="margin:10px;" class="btn btn-outline-success" 
               href="{{route('salir')}}">Salir</a>
-              {{-- Mostrar nº de productos en carrito --}}
-         
-              @if (session('carrito')!=null)
-                  <h3>
-                    <a href="{{route('verCarrito')}}">Carrito:{{sizeof(session('carrito'))}}</a>
-                  </h3>
-              @endif
+              </div>
+              
             </div>
             <nav class="navbar navbar-expand-lg navbar-light bg-light">
                 <div class="container-fluid">
