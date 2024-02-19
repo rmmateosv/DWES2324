@@ -7,16 +7,15 @@
     <title>Document</title>
 </head>
 <body>
-    <h1>CREAR PRÉSTAMO</h1>
-    <form action="{{route('rutaInsertar')}}" method="post">
+    <h1>MODIFICAR PRÉSTAMO</h1>
+    <form action="{{route('rutaActualizar',$p->id)}}" method="post">
         @csrf
-        <label for="fecha">Fecha</label><br/>
-        @if (old('fecha')!=null)
-            <input type="date" name="fecha" value="{{old('fecha')}}"/><br/>    
-        @else
-            <input type="date" name="fecha" value="{{date('Y-m-d')}}"/><br/>
-        @endif
-        
+        <label for="Id">Id</label><br/>
+        <input type="number" name="id" disabled="disabled" 
+        value="{{$p->id}}"/><br/>    
+        <p/>
+        <label for="fecha">Fecha</label><br/>        
+        <input type="date" name="fecha" value="{{$p->fecha}}"/><br/>    
         @error('fecha')
         <div>
             Rellena Fecha
@@ -26,7 +25,7 @@
         <label for="libro">Libro</label><br/>
         <select name="libro" id="libro">
             @foreach ($libros as $l)
-                @if (old('libro')!=null and old('libro')==$l->id)
+                @if ($p->id==$l->id)
                     <option value="{{$l->id}}" selected="selected">
                         {{$l->titulo}}</option>
                 @else
@@ -41,15 +40,18 @@
         @enderror
         <p/>
         <label for="cliente">Cliente</label><br/>
-        <input type="text" name="cliente" value="{{old('cliente')}}"/>
+        <input type="text" name="cliente" value="{{$p->nombreCliente}}"/>
         @error('cliente')
         <div>
             Rellena Cliente
         </div>            
         @enderror
         <p/>
-        <button type="submit">Crear</button>
-        <button type="reset">Limpiar</button>
+        <label for="fechaD">Fecha Devolución</label><br/>       
+        <input type="date" name="fechaD" value="{{$p->fechaDevolucion}}"/><br/>    
+       
+        <button type="submit">Modificar</button>
+        <a href="{{route('rutaVer')}}">Cancelar</a>
     </form>
     <div style="color:red;">
         @if (session('mensaje')!=null)
