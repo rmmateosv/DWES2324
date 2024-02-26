@@ -25,7 +25,7 @@
         <label for="libro">Libro</label><br/>
         <select name="libro" id="libro">
             @foreach ($libros as $l)
-                @if ($p->id==$l->id)
+                @if ($p->libro_id==$l->id)
                     <option value="{{$l->id}}" selected="selected">
                         {{$l->titulo}}</option>
                 @else
