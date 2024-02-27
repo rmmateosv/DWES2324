@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        const dns = 'http://ec2-44-200-178-139.compute-1.amazonaws.com/';
+        const url = dns + 'dwes2324/u4_tiendaLaravel/public/api/';
+        const urlIMG = dns + 'dwes2324/u4_tiendaLaravel/public/storage/';
+        var idCliente = -1; //No hay cliente logueado
+        var nombreCliente = '';
+        function login() {
+            var servicio = new XMLHttpRequest();
+            servicio.open('POST', url + 'cliente', true);
+            servicio.setRequestHeader('Content-Type', 'application/json');
+            servicio.onreadystatechange = function () {
+                if (servicio.readyState === XMLHttpRequest.DONE) {
+                    if (servicio.status === 200) {
+                        //REcuperar json con id de cliente y nombre
+                        var retorno = JSON.parse(servicio.responseText);
+                        console.log(servicio.responseText);
+                        idCliente = retorno.data.id;
+                        nombreCliente = retorno.data.nombre;
+                        document.getElementById('txtCliente').innerHTML = idCliente;
+                        document.getElementById('txtNombreCliente').innerHTML = nombreCliente;
+                        //Cargar Productos
+                        cargarProductos();
+                    }
+                    else {
+                        alert(servicio.status + ":" + servicio.responseText);
+                    }
+                }
+            };
+            var datos = {
+                email: document.getElementById('email').value,
+                ps: document.getElementById('ps').value
+            };
+            var datosJSON = JSON.stringify(datos);
+            servicio.send(datosJSON);
+
+        }
+        function cargarProductos() {
+            if (idCliente > 0) {
+                var servicio = new XMLHttpRequest();
+                servicio.onreadystatechange = function () {
+                    if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
+                        console.log(this.responseText);
+                        var productos = JSON.parse(this.responseText);
+                        var filasTabla = document.getElementById("cuerpoTabla");
+                        filasTabla.innerHTML = "";
+                        for (var i = 0; i < productos.length; i++) {
+
+                            var fila = "<tr>" +
+                                "<td>" + productos[i].id + "</td>" +
+                                "<td>" + productos[i].nombre + "</td>" +
+                                "<td>" + productos[i].descripcion + "</td>" +
+                                "<td>" + productos[i].precio + "</td>" +
+                                "<td>" + productos[i].stock + "</td>" +
+                                "<td><img src='" + urlIMG + productos[i].img + "' width='50px'/></td>" +
+                                "<td><button type='button' onclick='comprar(" + productos[i].id + ")'>Comprar</button></td>" +
+                                "</tr>";
+                            filasTabla.innerHTML += fila;
+                        }
+                    }
+                };
+                servicio.open("GET", url + "apiProductos", true);
+                servicio.send();
+            }
+        }
+        function comprar(idProd) {
+            if (idCliente > 0) {
+                var servicio = new XMLHttpRequest();
+                servicio.open('POST', url + 'apiPedido', true);
+                servicio.setRequestHeader('Content-Type', 'application/json');
+                servicio.onreadystatechange = function () {
+                    if (servicio.readyState === XMLHttpRequest.DONE) {
+                        if (servicio.status === 200) {
+                            alert('Pedido Creado');
+                            cargarProductos();
+                        }
+                        else {
+                            alert(servicio.status + ":" + servicio.responseText);
+                        }
+                    }
+                };
+                var datos = {
+                    idC: idCliente,
+                    idP: idProd,
+                    cantidad: 1
+                };
+                var datosJSON = JSON.stringify(datos);
+                servicio.send(datosJSON);
+            }
+        }
+    </script>
+    <form action="#">
+        <label for="email">Email</label>
+        <input type="email" id="email" value="ana@gmail.com" required="required" />
+        <label for="ps">Contraseña</label>
+        <input type="password" id="ps" value="ana" required="required" />
+        <button type="button" onclick="login()">Login</button>
+    </form>
+    <h3 id="txtCliente"></h3>
+    <h3 id="txtNombreCliente"></h3>
+    <table>
+        <thead>
+            <tr>
+                <td>Id</td>
+                <td>Nombre</td>
+                <td>Descripción</td>
+                <td>Precio</td>
+                <td>Stock</td>
+                <td>Imagen</td>
+                <td>Acciones</td>
+            </tr>
+        </thead>
+        <tbody id="cuerpoTabla">
+        </tbody>
+    </table>
+</body>
+
+</html>
