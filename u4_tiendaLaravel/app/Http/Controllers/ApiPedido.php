@@ -72,7 +72,11 @@ class ApiPedido extends Controller
                     $nuevo->precioU = $p->precio;
                     $nuevo->pedido_id=$ped->id;
                     $nuevo->producto = $p->id;
-                    $nuevo->save();                   
+                    if($nuevo->save()){
+                        //Decrementar el stock del prodcuto
+                        $p->stock=$p->stock-$cant;
+                        $p->save();
+                    }                   
                 }
         });
         }
@@ -80,9 +84,8 @@ class ApiPedido extends Controller
             $error=true;
             return response()->json($e->getMessage(),500); 
         }
-        finally{
-           
-        }        
+             
+        return $ped;   
 
     }
 
@@ -116,5 +119,17 @@ class ApiPedido extends Controller
     public function destroy(string $id)
     {
         //
+    }
+    public function obtenerPedidosCliente(string $id)
+    {
+        //
+        $pedidos = Pedido::where('cliente_id',$id)->get();
+        $detalles = array();
+        foreach($pedidos as $p){
+            foreach($p->detalle() as $d){
+                $detalles[]=$d;
+            }
+        }
+        return $detalles;
     }
 }

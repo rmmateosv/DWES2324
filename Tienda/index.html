@@ -9,10 +9,15 @@
 
 <body>
     <script>
-        const dns = 'http://ec2-44-200-178-139.compute-1.amazonaws.com/';
+        const dns = 'http://ec2-3-239-49-83.compute-1.amazonaws.com/';
         const url = dns + 'dwes2324/u4_tiendaLaravel/public/api/';
         const urlIMG = dns + 'dwes2324/u4_tiendaLaravel/public/storage/';
+        //Tienda de Walldy
+        const dns2 = 'http://ec2-44-200-114-53.compute-1.amazonaws.com/';
+        const url2 = dns2 + 'EntornoServidorXAMPP/2º Trimestre/u4_tiendaLaravel/public/api/';
+        const urlIMG2 = dns2 + 'EntornoServidorXAMPP/2º Trimestre/u4_tiendaLaravel/public/storage/';
         var idCliente = -1; //No hay cliente logueado
+        var idClienteDwes = -1; //Cliente tienda Walldy
         var nombreCliente = '';
         function login() {
             var servicio = new XMLHttpRequest();
@@ -30,6 +35,9 @@
                         document.getElementById('txtNombreCliente').innerHTML = nombreCliente;
                         //Cargar Productos
                         cargarProductos();
+                        //Login de usuario DWES2324
+                        login2();
+                        mostrarPedidos();
                     }
                     else {
                         alert(servicio.status + ":" + servicio.responseText);
@@ -43,7 +51,7 @@
             var datosJSON = JSON.stringify(datos);
             servicio.send(datosJSON);
 
-        }
+        }        
         function cargarProductos() {
             if (idCliente > 0) {
                 var servicio = new XMLHttpRequest();
@@ -66,11 +74,14 @@
                                 "</tr>";
                             filasTabla.innerHTML += fila;
                         }
+                        cargarProductos2();
+                        mostrarPedidos();
                     }
                 };
                 servicio.open("GET", url + "apiProductos", true);
                 servicio.send();
             }
+          
         }
         function comprar(idProd) {
             if (idCliente > 0) {
@@ -97,6 +108,148 @@
                 servicio.send(datosJSON);
             }
         }
+        function login2() {
+            var servicio = new XMLHttpRequest();
+            servicio.open('POST', url2 + 'cliente', true);
+            servicio.setRequestHeader('Content-Type', 'application/json');
+            servicio.onreadystatechange = function () {
+                if (servicio.readyState === XMLHttpRequest.DONE) {
+                    if (servicio.status === 200) {
+                        //REcuperar json con id de cliente y nombre
+                        var retorno = JSON.parse(servicio.responseText);
+                        console.log(servicio.responseText);
+                        idClienteDwes = retorno.data.id;
+                        //Cargar Productos
+                        cargarProductos2();
+                    }
+                    else {
+                        alert(servicio.status + ":" + servicio.responseText);
+                    }
+                }
+            };
+            var datos = {
+                email: 'dwes2324@dwes2324.com',
+                ps: 'dwes2324'
+            };
+            var datosJSON = JSON.stringify(datos);
+            servicio.send(datosJSON);
+
+        }
+        function cargarProductos2() {
+            if (idClienteDwes > 0) {
+                var servicio = new XMLHttpRequest();
+                servicio.onreadystatechange = function () {
+                    if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
+                        console.log(this.responseText);
+                        var productos = JSON.parse(this.responseText);
+                        var filasTabla = document.getElementById("cuerpoTabla");
+                        //filasTabla.innerHTML = "";
+                        for (var i = 0; i < productos.length; i++) {
+
+                            var fila = "<tr>" +
+                                "<td>" + productos[i].id + "</td>" +
+                                "<td>" + productos[i].nombre + "</td>" +
+                                "<td>" + productos[i].descripcion + "</td>" +
+                                "<td>" + productos[i].precio + "</td>" +
+                                "<td>" + productos[i].stock + "</td>" +
+                                "<td><img src='" + urlIMG2 + productos[i].imagen + "' width='50px'/></td>" +
+                                "<td><button type='button' onclick='comprar2(" + productos[i].id + ")'>Comprar</button></td>" +
+                                "</tr>";
+                            filasTabla.innerHTML += fila;
+                        }
+                    }
+                };
+                servicio.open("GET", url2 + "apiProductos", true);
+                servicio.send();
+            }
+        }
+        function comprar2(idProd) {
+            if (idClienteDwes > 0) {
+                var servicio = new XMLHttpRequest();
+                servicio.open('POST', url2 + 'apiPedido', true);
+                servicio.setRequestHeader('Content-Type', 'application/json');
+                servicio.onreadystatechange = function () {
+                    if (servicio.readyState === XMLHttpRequest.DONE) {
+                        if (servicio.status === 200) {
+                            cargarProductos();
+                        }
+                        else {
+                            alert(servicio.status + ":" + servicio.responseText);
+                        }
+                    }
+                };
+                var datos = {
+                    idC: idClienteDwes,
+                    idP: idProd,
+                    cantidad: 1
+                };
+                var datosJSON = JSON.stringify(datos);
+                servicio.send(datosJSON);
+            }
+        }
+        function mostrarPedidos(){
+            if (idCliente > 0) {
+                var servicio = new XMLHttpRequest();
+                servicio.open('GET', url + 'apiVerPedidos/' + idCliente, true);
+                servicio.setRequestHeader('Content-Type', 'application/json');
+                servicio.onreadystatechange = function () {
+                    if (servicio.readyState === XMLHttpRequest.DONE) {
+                        if (servicio.status === 200) {
+                            var pedidos = JSON.parse(this.responseText);
+                            var filasTabla = document.getElementById("cuerpoPedidos");
+                            filasTabla.innerHTML = "";
+                            for (var i = 0; i < pedidos.length; i++) {
+
+                                var fila = "<tr>" +
+                                    "<td>" + pedidos[i].id + "</td>" +
+                                    "<td>" + pedidos[i].producto + "</td>" +
+                                    "<td>" + pedidos[i].cantidad + "</td>" +
+                                    "<td>" + pedidos[i].precioU + "</td>" +
+                                    "</tr>";
+                                filasTabla.innerHTML += fila;
+                            }
+                            mostrarPedidos2();
+                        }
+                        else {
+                            alert(servicio.status + ":" + servicio.responseText);
+                        }
+                    }
+                };                
+                servicio.send();
+            }
+        }
+        function mostrarPedidos2(){
+            if (idClienteDwes > 0) {
+                var servicio = new XMLHttpRequest();
+                servicio.open('GET', url2 + 'ApiverPedidos/' + idClienteDwes, true);
+                alert(url2 + 'apiverPedidos/' + idClienteDwes);
+                servicio.setRequestHeader('Content-Type', 'application/json');
+                servicio.onreadystatechange = function () {
+                    if (servicio.readyState === XMLHttpRequest.DONE) {
+                        if (servicio.status === 200) {
+                            var pedidos = JSON.parse(this.responseText);
+                            var filasTabla = document.getElementById("cuerpoPedidos");
+                            //filasTabla.innerHTML = "";
+                            for (var i = 0; i < pedidos.length; i++) {
+
+                                var fila = "<tr>" +
+                                    "<td>" + pedidos[i].id + "</td>" +
+                                    "<td>" + pedidos[i].producto + "</td>" +
+                                    "<td>" + pedidos[i].cantidad + "</td>" +
+                                    "<td>" + pedidos[i].precioU + "</td>" +
+                                    "</tr>";
+                                filasTabla.innerHTML += fila;
+                            }
+                            //!!!!!mostrarPedidos2();
+                        }
+                        else {
+                            alert(servicio.status + ":" + servicio.responseText);
+                        }
+                    }
+                };                
+                servicio.send();
+            }
+        }
     </script>
     <form action="#">
         <label for="email">Email</label>
@@ -120,6 +273,19 @@
             </tr>
         </thead>
         <tbody id="cuerpoTabla">
+        </tbody>
+    </table>
+    <h1>PEDIDOS REALIZADOS</h1>
+    <table>
+        <thead>
+            <tr>
+                <td>IdPedido</td>
+                <td>IdProducto</td>
+                <td>Cantidad</td>
+                <td>Precio Udad</td>
+            </tr>
+        </thead>
+        <tbody id="cuerpoPedidos">
         </tbody>
     </table>
 </body>

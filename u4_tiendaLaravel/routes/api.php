@@ -29,3 +29,6 @@ Route::apiResources([
 
 //Crear ruta api para loguear a un cliente
 Route::post('cliente',[ApiLogin::class,'login']);
+
+//Ruta para cargar los pedidos de un cliente
+Route::get('apiVerPedidos/{idC}',[ApiPedido::class,'obtenerPedidosCliente']);
